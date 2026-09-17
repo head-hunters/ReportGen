@@ -45,6 +45,7 @@ def index():
 @app.route("/login", methods=["GET", "POST"])
 # User login
 
+
 def login():
     if request.method == "POST":
         email = request.form.get("email")
@@ -56,9 +57,12 @@ def login():
         elif not password:
             flash("Invalid password.", "Error")
             return render_template("login.html", email=email)
-        
+
+        return render_template("login.html")
+
     else:
         return render_template("login.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
