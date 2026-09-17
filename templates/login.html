@@ -1,0 +1,23 @@
+{%extends "layout.html"%}
+
+{%block title%}
+Login
+{%endblock%}
+
+{%block content%}
+
+<h1>login</h1>
+<form method="POST">
+    <div class="mb-3">
+        <input type="email" placeholder="Email" name="email" value="{{email}}">
+    </div>
+    <div class="mb-3">
+        <input type="password" placeholder="Password" name="password" value="{{password}}">
+    </div>
+    
+    <button class="btn btn-primary" type="submit">login</button>
+
+</form>
+
+
+{%endblock%}

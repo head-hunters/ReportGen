@@ -38,5 +38,27 @@ def register():
         return render_template("register.html")
 
 
+def index():
+    return redirect(url_for("login"))
+
+
+@app.route("/login", methods=["GET", "POST"])
+# User login
+
+def login():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        if not email:
+            flash("Invalid email.", "Error")
+            return render_template("login.html")
+        elif not password:
+            flash("Invalid password.", "Error")
+            return render_template("login.html", email=email)
+        
+    else:
+        return render_template("login.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
