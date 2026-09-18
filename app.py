@@ -87,11 +87,19 @@ def login():
 
 @app.route("/dashboard.html")
 def dashboard():
+    db = sqlite3.connect("database/app.db")
+    db.row_factory = sqlite3.Row
+
+    name = db.execute(
+        "Select email from users where id=?", (session["user_id"],)
+    ).fetchone()
+
+    name = name["email"].split("@")[0].capitalize()
 
     if "user_id" not in session:
         return redirect(url_for("login"))
 
-    return render_template("dashboard.html")
+    return render_template("dashboard.html", name=name)
 
 
 if __name__ == "__main__":
