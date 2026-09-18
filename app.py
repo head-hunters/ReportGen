@@ -7,18 +7,15 @@ app.secret_key = "your-secret-key"
 
 
 @app.route("/")
-# Redirect by default
-
-
 def index():
     return redirect(url_for("register"))
 
 
 @app.route("/register", methods=["GET", "POST"])
-# User registration
-
-
 def register():
+
+    db = sqlite3.connect("database/app.db")
+
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
@@ -33,21 +30,37 @@ def register():
         elif not confirm or password != confirm:
             flash("Invalid confirmation", "Error")
             return render_template("register.html", email=email, password=password)
-        return render_template("register.html")
+
+        try:
+
+            db.execute(
+                "INSERT INTO users (email,password_hash) VALUES(?,?)",
+                (email, generate_password_hash(password)),
+            )
+
+            db.commit()
+            db.close()
+        except sqlite3.IntegrityError:
+            flash("Account already Exists!", "Error")
+            return render_template("register.html")
+
+        return render_template("dashboard.html")
     else:
         return render_template("register.html")
 
 
-def index():
+@app.route("/logout")
+def logout():
+    session.clear()
     return redirect(url_for("login"))
 
 
 @app.route("/login", methods=["GET", "POST"])
-# User login
-
-
 def login():
+
     if request.method == "POST":
+        db = sqlite3.connect("database/app.db")
+        db.row_factory = sqlite3.Row
         email = request.form.get("email")
         password = request.form.get("password")
 
@@ -58,10 +71,27 @@ def login():
             flash("Invalid password.", "Error")
             return render_template("login.html", email=email)
 
-        return render_template("login.html")
+        user = db.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
+        if not user or not check_password_hash(user["password_hash"], password):
+            flash("Invalid username and/or password", "Error")
+            return render_template("login.html")
+
+        session["user_id"] = user["id"]
+
+        db.close()
+        return redirect(url_for("dashboard"))
 
     else:
         return render_template("login.html")
+
+
+@app.route("/dashboard.html")
+def dashboard():
+
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    return render_template("dashboard.html")
 
 
 if __name__ == "__main__":
