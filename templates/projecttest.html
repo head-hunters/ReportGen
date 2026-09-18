@@ -1,0 +1,422 @@
+{%extends "layout.html"%}
+{%block title%}
+Project Form
+{%endblock%}
+
+{%block content%}
+
+<!-- ================= HEADER ================= -->
+
+<div class="hero py-5">
+
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <span class="badge mb-2">
+                    PROJECT DOCUMENT GENERATOR
+                </span>
+
+                <h1 class="fw-bold mb-2">
+                    Project Details
+                </h1>
+
+                <p class="mb-0 text-muted">
+                    Fill in your project information and generate a professional PDF.
+                </p>
+
+            </div>
+
+
+            <!-- Back Button -->
+
+            <button type="button" class="btn btn-outline-light d-none d-md-block"
+                onclick="window.location.href='login.html'">
+
+                Back to Login
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= FORM ================= -->
+
+<main class="container pb-5">
+
+    <div class="card form-card">
+
+        <div class="card-body p-4 p-md-5">
+
+
+            <form id="projectForm">
+
+
+                <!-- ================= BASIC INFORMATION ================= -->
+
+                <div class="mb-5">
+
+                    <h4 class="section-title mb-1">
+                        Basic Information
+                    </h4>
+
+                    <p class="text-muted mb-4">
+                        Enter the main details of your project.
+                    </p>
+
+
+                    <!-- Project Title -->
+
+                    <div class="mb-3">
+
+                        <label for="title" class="form-label required">
+
+                            Project Title
+
+                        </label>
+
+                        <input type="text" class="form-control" id="title"
+                            placeholder="Example: Smart Campus Management System" required>
+
+                    </div>
+
+
+                    <!-- Student + Department -->
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label for="studentName" class="form-label">
+
+                                Student Name
+
+                            </label>
+
+                            <input type="text" class="form-control" id="studentName" placeholder="Enter your name">
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label for="department" class="form-label">
+
+                                Department / Course
+
+                            </label>
+
+                            <input type="text" class="form-control" id="department"
+                                placeholder="Example: BCA (Cyber Security)">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================= ABSTRACT ================= -->
+
+                <div class="mb-5">
+
+                    <h4 class="section-title mb-1">
+                        Abstract
+                    </h4>
+
+                    <p class="text-muted mb-4">
+                        Give a short overview of your project.
+                    </p>
+
+
+                    <label for="abstract" class="form-label required">
+
+                        Project Abstract
+
+                    </label>
+
+
+                    <textarea class="form-control" id="abstract" rows="5"
+                        placeholder="Write a brief summary of your project, its purpose, and expected outcome..."
+                        required></textarea>
+
+                </div>
+
+
+
+                <!-- ================= PROJECT DESCRIPTION ================= -->
+
+                <div class="mb-5">
+
+                    <h4 class="section-title mb-1">
+                        Project Description
+                    </h4>
+
+                    <p class="text-muted mb-4">
+                        Explain the project in more detail.
+                    </p>
+
+
+                    <label for="description" class="form-label required">
+
+                        Project Description
+
+                    </label>
+
+
+                    <textarea class="form-control" id="description" rows="7"
+                        placeholder="Describe the problem, proposed solution, technologies used, features, and working process..."
+                        required></textarea>
+
+                </div>
+
+
+
+                <!-- ================= MODULES ================= -->
+
+                <div class="mb-5">
+
+                    <h4 class="section-title mb-1">
+                        Project Modules
+                    </h4>
+
+                    <p class="text-muted mb-4">
+                        Specify the number and details of your modules.
+                    </p>
+
+
+                    <div class="row align-items-end g-3">
+
+
+                        <div class="col-md-4">
+
+                            <label for="modules" class="form-label required">
+
+                                Number of Modules
+
+                            </label>
+
+
+                            <input type="number" class="form-control" id="modules" min="1" max="50"
+                                placeholder="Example: 5" required>
+
+                        </div>
+
+
+                        <div class="col-md-8">
+
+                            <label for="moduleDetails" class="form-label">
+
+                                Module Details
+
+                            </label>
+
+
+                            <input type="text" class="form-control" id="moduleDetails"
+                                placeholder="Example: Login, Dashboard, Reports, Admin, Database">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================= LITERATURE SURVEY ================= -->
+
+                <div class="mb-5">
+
+                    <h4 class="section-title mb-1">
+                        Literature Survey
+                    </h4>
+
+                    <p class="text-muted mb-4">
+
+                        Mention previous studies, papers, systems,
+                        or technologies related to your project.
+
+                    </p>
+
+
+                    <label for="literature" class="form-label required">
+
+                        Literature Survey
+
+                    </label>
+
+
+                    <textarea class="form-control" id="literature" rows="6"
+                        placeholder="Enter your literature survey, references, previous systems, research findings, etc..."
+                        required></textarea>
+
+                </div>
+
+
+
+                <!-- ================= OTHER DETAILS ================= -->
+
+                <div class="mb-5">
+
+                    <h4 class="section-title mb-1">
+                        Other Project Details
+                    </h4>
+
+                    <p class="text-muted mb-4">
+                        Add any additional information required for your project.
+                    </p>
+
+
+                    <div class="row g-3">
+
+
+                        <!-- Technologies -->
+
+                        <div class="col-md-6">
+
+                            <label for="technology" class="form-label">
+
+                                Technologies Used
+
+                            </label>
+
+
+                            <input type="text" class="form-control" id="technology"
+                                placeholder="Example: HTML, CSS, Bootstrap, PHP, MySQL">
+
+                        </div>
+
+
+
+                        <!-- Duration -->
+
+                        <div class="col-md-6">
+
+                            <label for="duration" class="form-label">
+
+                                Project Duration
+
+                            </label>
+
+
+                            <input type="text" class="form-control" id="duration" placeholder="Example: 3 Months">
+
+                        </div>
+
+
+
+                        <!-- Objectives -->
+
+                        <div class="col-12">
+
+                            <label for="objectives" class="form-label">
+
+                                Project Objectives
+
+                            </label>
+
+
+                            <textarea class="form-control" id="objectives" rows="4"
+                                placeholder="List the main objectives of your project..."></textarea>
+
+                        </div>
+
+
+
+                        <!-- Future Scope -->
+
+                        <div class="col-12">
+
+                            <label for="futureScope" class="form-label">
+
+                                Future Scope
+
+                            </label>
+
+
+                            <textarea class="form-control" id="futureScope" rows="4"
+                                placeholder="Explain possible future improvements and extensions..."></textarea>
+
+                        </div>
+
+
+
+                        <!-- Additional Details -->
+
+                        <div class="col-12">
+
+                            <label for="additional" class="form-label">
+
+                                Additional Details
+
+                            </label>
+
+
+                            <textarea class="form-control" id="additional" rows="4"
+                                placeholder="Any other information you want to include..."></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================= BUTTONS ================= -->
+
+                <div class="border-top pt-4">
+
+                    <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
+
+
+                        <!-- Clear Form -->
+
+                        <button type="reset" class="btn btn-outline-secondary px-4">
+
+                            Clear Form
+
+                        </button>
+
+
+
+                        <!-- Preview -->
+
+                        <button type="button" class="btn btn-outline-primary px-4" onclick="previewProject()">
+
+                            Preview
+
+                        </button>
+
+
+
+                        <!-- Generate PDF -->
+
+                        <button type="submit" class="btn btn-generate">
+
+                            Generate PDF
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+{%endblock%}

@@ -102,5 +102,10 @@ def dashboard():
     return render_template("dashboard.html", name=name)
 
 
+@app.route("/projecttest.html")
+def project():
+    return render_template("projecttest.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)

@@ -2,3 +2,242 @@ h1 {
     position: relative;
     top: -20px;
 }
+
+
+
+
+
+
+/*Project_Form CSS/*
+
+        /* ================= BODY ================= */
+
+body {
+    min-height: 100vh;
+    background: #ffffff;
+    color: #000000;
+}
+
+
+/* ================= HEADER ================= */
+
+.hero {
+    background: #ffffff;
+    color: #000000;
+    border-bottom: 1px solid #dddddd;
+}
+
+
+.hero .badge {
+    background: #000000 !important;
+    color: #ffffff !important;
+    border-radius: 4px;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+
+/* ================= FORM CARD ================= */
+
+.form-card {
+    margin-top: 35px;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ================= SECTION HEADINGS ================= */
+
+.section-title {
+    color: #000000;
+    font-weight: 600;
+}
+
+/* Lines between sections */
+.form-card .mb-5 {
+    border-bottom: 1px solid #555555;
+    padding-bottom: 35px;
+}
+
+/* Remove line from the last section */
+.form-card .mb-5:last-of-type {
+    border-bottom: none;
+}
+
+/* ================= DESCRIPTIONS ================= */
+
+.text-muted {
+    color: #666666 !important;
+}
+
+
+/* ================= LABELS ================= */
+
+.form-label {
+    color: #000000;
+}
+
+
+/* ================= INPUTS ================= */
+
+.form-control,
+.form-select {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    padding: 11px 13px;
+}
+
+
+.form-control::placeholder {
+    color: #999999;
+}
+
+
+.form-control:focus,
+.form-select:focus {
+    background: #ffffff;
+    color: #000000;
+    border-color: #000000;
+    box-shadow: 0 0 0 1px #000000;
+}
+
+
+/* ================= TEXTAREA ================= */
+
+textarea {
+    resize: vertical;
+}
+
+
+/* ================= BUTTONS ================= */
+
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+
+/* Generate PDF */
+
+.btn-generate {
+    background: #000000;
+    border: 1px solid #000000;
+    color: #ffffff;
+    padding: 11px 24px;
+}
+
+
+.btn-generate:hover {
+    background: #333333;
+    border-color: #333333;
+    color: #ffffff;
+}
+
+
+/* Back Button */
+
+.btn-outline-light {
+    border-color: #000000;
+    color: #000000;
+}
+
+
+.btn-outline-light:hover {
+    background: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+
+
+/* Clear Button */
+
+.btn-outline-secondary {
+    border-color: #cccccc;
+    color: #000000;
+}
+
+
+.btn-outline-secondary:hover {
+    background: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+
+
+/* Preview Button */
+
+.btn-outline-primary {
+    border-color: #cccccc;
+    color: #000000;
+}
+
+
+.btn-outline-primary:hover {
+    background: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+
+
+/* ================= BORDER ================= */
+
+.border-top {
+    border-color: #dddddd !important;
+}
+
+
+/* ================= MODAL ================= */
+
+.modal-content {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #dddddd;
+}
+
+
+.modal-header,
+.modal-footer {
+    border-color: #dddddd;
+}
+
+
+.modal-title {
+    color: #000000;
+}
+
+
+.btn-close {
+    filter: none;
+}
+
+
+#previewContent {
+    color: #222222;
+}
+
+
+#previewContent h3 {
+    color: #000000;
+}
+
+
+#previewContent h6 {
+    color: #000000 !important;
+}
+
+
+#previewContent hr {
+    border-color: #dddddd;
+}
+
+
+/* ================= REQUIRED FIELDS ================= */
+
+.required::after {
+    content: " *";
+    color: #000000;
+}
