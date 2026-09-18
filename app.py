@@ -102,9 +102,9 @@ def dashboard():
     return render_template("dashboard.html", name=name)
 
 
-@app.route("/projecttest.html")
+@app.route("/project_form.html")
 def project():
-    return render_template("projecttest.html")
+    return render_template("project_form.html")
 
 
 if __name__ == "__main__":

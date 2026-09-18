@@ -3,8 +3,13 @@ h1 {
     top: -20px;
 }
 
+.auth-page {
+    padding-top: 100px;
+}
 
-
+.dashboard {
+    padding-top: 50px;
+}
 
 
 

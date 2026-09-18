@@ -1,1230 +1,414 @@
-<!DOCTYPE html>
-<html lang="en">
+{% set show_dashboard = true %}
+{%extends "layout.html"%}
+{%block title%}
+Project Form
+{%endblock%}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{%block content%}
 
-    <title>Project Details Form</title>
+<!-- ================= HEADER ================= -->
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<div class="hero py-5">
 
-    <!-- jsPDF Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+    <div class="container">
 
+        <div class="d-flex justify-content-between align-items-center">
 
-    <style>
-        /* ================= BODY ================= */
+            <div>
 
-        body {
-            min-height: 100vh;
-            background: #ffffff;
-            color: #000000;
-        }
 
 
-        /* ================= HEADER ================= */
+                <h1 class="fw-bold mb-2">
+                    Project Details
+                </h1>
 
-        .hero {
-            background: #ffffff;
-            color: #000000;
-            border-bottom: 1px solid #dddddd;
-        }
-
-
-        .hero .badge {
-            background: #000000 !important;
-            color: #ffffff !important;
-            border-radius: 4px;
-            font-size: 11px;
-            letter-spacing: 1px;
-        }
-
-
-        /* ================= FORM CARD ================= */
-
-        .form-card {
-            margin-top: 35px;
-            background: #ffffff;
-            border: 1px solid #dddddd;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-
-
-        /* ================= SECTION HEADINGS ================= */
-
-        .section-title {
-            color: #000000;
-            font-weight: 600;
-        }
-
-        /* Lines between sections */
-        .form-card .mb-5 {
-            border-bottom: 1px solid #555555;
-            padding-bottom: 35px;
-        }
-
-        /* Remove line from the last section */
-        .form-card .mb-5:last-of-type {
-            border-bottom: none;
-        }
-
-        /* ================= DESCRIPTIONS ================= */
-
-        .text-muted {
-            color: #666666 !important;
-        }
-
-
-        /* ================= LABELS ================= */
-
-        .form-label {
-            color: #000000;
-        }
-
-
-        /* ================= INPUTS ================= */
-
-        .form-control,
-        .form-select {
-            background: #ffffff;
-            color: #000000;
-            border: 1px solid #cccccc;
-            border-radius: 6px;
-            padding: 11px 13px;
-        }
-
-
-        .form-control::placeholder {
-            color: #999999;
-        }
-
-
-        .form-control:focus,
-        .form-select:focus {
-            background: #ffffff;
-            color: #000000;
-            border-color: #000000;
-            box-shadow: 0 0 0 1px #000000;
-        }
-
-
-        /* ================= TEXTAREA ================= */
-
-        textarea {
-            resize: vertical;
-        }
-
-
-        /* ================= BUTTONS ================= */
-
-        .btn {
-            border-radius: 6px;
-            font-weight: 500;
-        }
-
-
-        /* Generate PDF */
-
-        .btn-generate {
-            background: #000000;
-            border: 1px solid #000000;
-            color: #ffffff;
-            padding: 11px 24px;
-        }
-
-
-        .btn-generate:hover {
-            background: #333333;
-            border-color: #333333;
-            color: #ffffff;
-        }
-
-
-        /* Back Button */
-
-        .btn-outline-light {
-            border-color: #000000;
-            color: #000000;
-        }
-
-
-        .btn-outline-light:hover {
-            background: #000000;
-            border-color: #000000;
-            color: #ffffff;
-        }
-
-
-        /* Clear Button */
-
-        .btn-outline-secondary {
-            border-color: #cccccc;
-            color: #000000;
-        }
-
-
-        .btn-outline-secondary:hover {
-            background: #000000;
-            border-color: #000000;
-            color: #ffffff;
-        }
-
-
-        /* Preview Button */
-
-        .btn-outline-primary {
-            border-color: #cccccc;
-            color: #000000;
-        }
-
-
-        .btn-outline-primary:hover {
-            background: #000000;
-            border-color: #000000;
-            color: #ffffff;
-        }
-
-
-        /* ================= BORDER ================= */
-
-        .border-top {
-            border-color: #dddddd !important;
-        }
-
-
-        /* ================= MODAL ================= */
-
-        .modal-content {
-            background: #ffffff;
-            color: #000000;
-            border: 1px solid #dddddd;
-        }
-
-
-        .modal-header,
-        .modal-footer {
-            border-color: #dddddd;
-        }
-
-
-        .modal-title {
-            color: #000000;
-        }
-
-
-        .btn-close {
-            filter: none;
-        }
-
-
-        #previewContent {
-            color: #222222;
-        }
-
-
-        #previewContent h3 {
-            color: #000000;
-        }
-
-
-        #previewContent h6 {
-            color: #000000 !important;
-        }
-
-
-        #previewContent hr {
-            border-color: #dddddd;
-        }
-
-
-        /* ================= REQUIRED FIELDS ================= */
-
-        .required::after {
-            content: " *";
-            color: #000000;
-        }
-    </style>
-
-</head>
-
-
-<body>
-
-
-    <!-- ================= HEADER ================= -->
-
-    <div class="hero py-5">
-
-        <div class="container">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div>
-
-                    <span class="badge mb-2">
-                        PROJECT DOCUMENT GENERATOR
-                    </span>
-
-                    <h1 class="fw-bold mb-2">
-                        Project Details
-                    </h1>
-
-                    <p class="mb-0 text-muted">
-                        Fill in your project information and generate a professional PDF.
-                    </p>
-
-                </div>
-
-
-                <!-- Back Button -->
-
-                <button type="button" class="btn btn-outline-light d-none d-md-block"
-                    onclick="window.location.href='login.html'">
-
-                    Back to Login
-
-                </button>
+                <p class="mb-0 text-muted">
+                    Fill in your project information and generate a professional PDF.
+                </p>
 
             </div>
+
+
+
 
         </div>
 
     </div>
 
+</div>
 
 
-    <!-- ================= FORM ================= -->
 
-    <main class="container pb-5">
+<!-- ================= FORM ================= -->
 
-        <div class="card form-card">
+<main class="container pb-5">
 
-            <div class="card-body p-4 p-md-5">
+    <div class="card form-card">
 
-
-                <form id="projectForm">
+        <div class="card-body p-4 p-md-5">
 
 
-                    <!-- ================= BASIC INFORMATION ================= -->
-
-                    <div class="mb-5">
-
-                        <h4 class="section-title mb-1">
-                            Basic Information
-                        </h4>
-
-                        <p class="text-muted mb-4">
-                            Enter the main details of your project.
-                        </p>
+            <form id="projectForm">
 
 
-                        <!-- Project Title -->
+                <!-- ================= BASIC INFORMATION ================= -->
 
-                        <div class="mb-3">
+                <div class="mb-5">
 
-                            <label for="title" class="form-label required">
+                    <h4 class="section-title mb-1">
+                        Basic Information
+                    </h4>
 
-                                Project Title
+                    <p class="text-muted mb-4">
+                        Enter the main details of your project.
+                    </p>
+
+
+                    <!-- Project Title -->
+
+                    <div class="mb-3">
+
+                        <label for="title" class="form-label required">
+
+                            Project Title
+
+                        </label>
+
+                        <input type="text" class="form-control" id="title"
+                            placeholder="Example: Smart Campus Management System" required>
+
+                    </div>
+
+
+                    <!-- Student + Department -->
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label for="studentName" class="form-label">
+
+                                Student Name
 
                             </label>
 
-                            <input type="text" class="form-control" id="title"
-                                placeholder="Example: Smart Campus Management System" required>
+                            <input type="text" class="form-control" id="studentName" placeholder="Enter your name">
 
                         </div>
 
 
-                        <!-- Student + Department -->
+                        <div class="col-md-6">
 
-                        <div class="row g-3">
+                            <label for="department" class="form-label">
 
-                            <div class="col-md-6">
+                                Department / Course
 
-                                <label for="studentName" class="form-label">
+                            </label>
 
-                                    Student Name
-
-                                </label>
-
-                                <input type="text" class="form-control" id="studentName" placeholder="Enter your name">
-
-                            </div>
-
-
-                            <div class="col-md-6">
-
-                                <label for="department" class="form-label">
-
-                                    Department / Course
-
-                                </label>
-
-                                <input type="text" class="form-control" id="department"
-                                    placeholder="Example: BCA (Cyber Security)">
-
-                            </div>
+                            <input type="text" class="form-control" id="department"
+                                placeholder="Example: BCA (Cyber Security)">
 
                         </div>
 
                     </div>
-
-
-
-                    <!-- ================= ABSTRACT ================= -->
-
-                    <div class="mb-5">
-
-                        <h4 class="section-title mb-1">
-                            Abstract
-                        </h4>
-
-                        <p class="text-muted mb-4">
-                            Give a short overview of your project.
-                        </p>
-
-
-                        <label for="abstract" class="form-label required">
-
-                            Project Abstract
-
-                        </label>
-
-
-                        <textarea class="form-control" id="abstract" rows="5"
-                            placeholder="Write a brief summary of your project, its purpose, and expected outcome..."
-                            required></textarea>
-
-                    </div>
-
-
-
-                    <!-- ================= PROJECT DESCRIPTION ================= -->
-
-                    <div class="mb-5">
-
-                        <h4 class="section-title mb-1">
-                            Project Description
-                        </h4>
-
-                        <p class="text-muted mb-4">
-                            Explain the project in more detail.
-                        </p>
-
-
-                        <label for="description" class="form-label required">
-
-                            Project Description
-
-                        </label>
-
-
-                        <textarea class="form-control" id="description" rows="7"
-                            placeholder="Describe the problem, proposed solution, technologies used, features, and working process..."
-                            required></textarea>
-
-                    </div>
-
-
-
-                    <!-- ================= MODULES ================= -->
-
-                    <div class="mb-5">
-
-                        <h4 class="section-title mb-1">
-                            Project Modules
-                        </h4>
-
-                        <p class="text-muted mb-4">
-                            Specify the number and details of your modules.
-                        </p>
-
-
-                        <div class="row align-items-end g-3">
-
-
-                            <div class="col-md-4">
-
-                                <label for="modules" class="form-label required">
-
-                                    Number of Modules
-
-                                </label>
-
-
-                                <input type="number" class="form-control" id="modules" min="1" max="50"
-                                    placeholder="Example: 5" required>
-
-                            </div>
-
-
-                            <div class="col-md-8">
-
-                                <label for="moduleDetails" class="form-label">
-
-                                    Module Details
-
-                                </label>
-
-
-                                <input type="text" class="form-control" id="moduleDetails"
-                                    placeholder="Example: Login, Dashboard, Reports, Admin, Database">
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- ================= LITERATURE SURVEY ================= -->
-
-                    <div class="mb-5">
-
-                        <h4 class="section-title mb-1">
-                            Literature Survey
-                        </h4>
-
-                        <p class="text-muted mb-4">
-
-                            Mention previous studies, papers, systems,
-                            or technologies related to your project.
-
-                        </p>
-
-
-                        <label for="literature" class="form-label required">
-
-                            Literature Survey
-
-                        </label>
-
-
-                        <textarea class="form-control" id="literature" rows="6"
-                            placeholder="Enter your literature survey, references, previous systems, research findings, etc..."
-                            required></textarea>
-
-                    </div>
-
-
-
-                    <!-- ================= OTHER DETAILS ================= -->
-
-                    <div class="mb-5">
-
-                        <h4 class="section-title mb-1">
-                            Other Project Details
-                        </h4>
-
-                        <p class="text-muted mb-4">
-                            Add any additional information required for your project.
-                        </p>
-
-
-                        <div class="row g-3">
-
-
-                            <!-- Technologies -->
-
-                            <div class="col-md-6">
-
-                                <label for="technology" class="form-label">
-
-                                    Technologies Used
-
-                                </label>
-
-
-                                <input type="text" class="form-control" id="technology"
-                                    placeholder="Example: HTML, CSS, Bootstrap, PHP, MySQL">
-
-                            </div>
-
-
-
-                            <!-- Duration -->
-
-                            <div class="col-md-6">
-
-                                <label for="duration" class="form-label">
-
-                                    Project Duration
-
-                                </label>
-
-
-                                <input type="text" class="form-control" id="duration" placeholder="Example: 3 Months">
-
-                            </div>
-
-
-
-                            <!-- Objectives -->
-
-                            <div class="col-12">
-
-                                <label for="objectives" class="form-label">
-
-                                    Project Objectives
-
-                                </label>
-
-
-                                <textarea class="form-control" id="objectives" rows="4"
-                                    placeholder="List the main objectives of your project..."></textarea>
-
-                            </div>
-
-
-
-                            <!-- Future Scope -->
-
-                            <div class="col-12">
-
-                                <label for="futureScope" class="form-label">
-
-                                    Future Scope
-
-                                </label>
-
-
-                                <textarea class="form-control" id="futureScope" rows="4"
-                                    placeholder="Explain possible future improvements and extensions..."></textarea>
-
-                            </div>
-
-
-
-                            <!-- Additional Details -->
-
-                            <div class="col-12">
-
-                                <label for="additional" class="form-label">
-
-                                    Additional Details
-
-                                </label>
-
-
-                                <textarea class="form-control" id="additional" rows="4"
-                                    placeholder="Any other information you want to include..."></textarea>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- ================= BUTTONS ================= -->
-
-                    <div class="border-top pt-4">
-
-                        <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
-
-
-                            <!-- Clear Form -->
-
-                            <button type="reset" class="btn btn-outline-secondary px-4">
-
-                                Clear Form
-
-                            </button>
-
-
-
-                            <!-- Preview -->
-
-                            <button type="button" class="btn btn-outline-primary px-4" onclick="previewProject()">
-
-                                Preview
-
-                            </button>
-
-
-
-                            <!-- Generate PDF -->
-
-                            <button type="submit" class="btn btn-generate">
-
-                                Generate PDF
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-
-                </form>
-
-            </div>
-
-        </div>
-
-    </main>
-
-
-
-    <!-- ================= PREVIEW MODAL ================= -->
-
-    <div class="modal fade" id="previewModal" tabindex="-1">
-
-
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-
-
-            <div class="modal-content border-0 rounded-4">
-
-
-                <div class="modal-header">
-
-                    <h5 class="modal-title fw-bold">
-                        Project Preview
-                    </h5>
-
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal">
-                    </button>
 
                 </div>
 
 
-                <div class="modal-body" id="previewContent">
+
+                <!-- ================= ABSTRACT ================= -->
+
+                <div class="mb-5">
+
+                    <h4 class="section-title mb-1">
+                        Abstract
+                    </h4>
+
+                    <p class="text-muted mb-4">
+                        Give a short overview of your project.
+                    </p>
+
+
+                    <label for="abstract" class="form-label required">
+
+                        Project Abstract
+
+                    </label>
+
+
+                    <textarea class="form-control" id="abstract" rows="5"
+                        placeholder="Write a brief summary of your project, its purpose, and expected outcome..."
+                        required></textarea>
+
                 </div>
 
 
-                <div class="modal-footer">
 
-                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                <!-- ================= PROJECT DESCRIPTION ================= -->
 
-                        Close
+                <div class="mb-5">
 
-                    </button>
+                    <h4 class="section-title mb-1">
+                        Project Description
+                    </h4>
+
+                    <p class="text-muted mb-4">
+                        Explain the project in more detail.
+                    </p>
 
 
-                    <button class="btn btn-generate" onclick="document.getElementById('projectForm').requestSubmit()">
+                    <label for="description" class="form-label required">
 
-                        Generate PDF
+                        Project Description
 
-                    </button>
+                    </label>
+
+
+                    <textarea class="form-control" id="description" rows="7"
+                        placeholder="Describe the problem, proposed solution, technologies used, features, and working process..."
+                        required></textarea>
 
                 </div>
 
-            </div>
+
+
+                <!-- ================= MODULES ================= -->
+
+                <div class="mb-5">
+
+                    <h4 class="section-title mb-1">
+                        Project Modules
+                    </h4>
+
+                    <p class="text-muted mb-4">
+                        Specify the number and details of your modules.
+                    </p>
+
+
+                    <div class="row align-items-end g-3">
+
+
+                        <div class="col-md-4">
+
+                            <label for="modules" class="form-label required">
+
+                                Number of Modules
+
+                            </label>
+
+
+                            <input type="number" class="form-control" id="modules" min="1" max="50"
+                                placeholder="Example: 5" required>
+
+                        </div>
+
+
+                        <div class="col-md-8">
+
+                            <label for="moduleDetails" class="form-label">
+
+                                Module Details
+
+                            </label>
+
+
+                            <input type="text" class="form-control" id="moduleDetails"
+                                placeholder="Example: Login, Dashboard, Reports, Admin, Database">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================= LITERATURE SURVEY ================= -->
+
+                <div class="mb-5">
+
+                    <h4 class="section-title mb-1">
+                        Literature Survey
+                    </h4>
+
+                    <p class="text-muted mb-4">
+
+                        Mention previous studies, papers, systems,
+                        or technologies related to your project.
+
+                    </p>
+
+
+                    <label for="literature" class="form-label required">
+
+                        Literature Survey
+
+                    </label>
+
+
+                    <textarea class="form-control" id="literature" rows="6"
+                        placeholder="Enter your literature survey, references, previous systems, research findings, etc..."
+                        required></textarea>
+
+                </div>
+
+
+
+                <!-- ================= OTHER DETAILS ================= -->
+
+                <div class="mb-5">
+
+                    <h4 class="section-title mb-1">
+                        Other Project Details
+                    </h4>
+
+                    <p class="text-muted mb-4">
+                        Add any additional information required for your project.
+                    </p>
+
+
+                    <div class="row g-3">
+
+
+                        <!-- Technologies -->
+
+                        <div class="col-md-6">
+
+                            <label for="technology" class="form-label">
+
+                                Technologies Used
+
+                            </label>
+
+
+                            <input type="text" class="form-control" id="technology"
+                                placeholder="Example: HTML, CSS, Bootstrap, PHP, MySQL">
+
+                        </div>
+
+
+
+                        <!-- Duration -->
+
+                        <div class="col-md-6">
+
+                            <label for="duration" class="form-label">
+
+                                Project Duration
+
+                            </label>
+
+
+                            <input type="text" class="form-control" id="duration" placeholder="Example: 3 Months">
+
+                        </div>
+
+
+
+                        <!-- Objectives -->
+
+                        <div class="col-12">
+
+                            <label for="objectives" class="form-label">
+
+                                Project Objectives
+
+                            </label>
+
+
+                            <textarea class="form-control" id="objectives" rows="4"
+                                placeholder="List the main objectives of your project..."></textarea>
+
+                        </div>
+
+
+
+                        <!-- Future Scope -->
+
+                        <div class="col-12">
+
+                            <label for="futureScope" class="form-label">
+
+                                Future Scope
+
+                            </label>
+
+
+                            <textarea class="form-control" id="futureScope" rows="4"
+                                placeholder="Explain possible future improvements and extensions..."></textarea>
+
+                        </div>
+
+
+
+                        <!-- Additional Details -->
+
+                        <div class="col-12">
+
+                            <label for="additional" class="form-label">
+
+                                Additional Details
+
+                            </label>
+
+
+                            <textarea class="form-control" id="additional" rows="4"
+                                placeholder="Any other information you want to include..."></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================= BUTTONS ================= -->
+
+                <div class="border-top pt-4">
+
+                    <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
+
+
+                        <!-- Clear Form -->
+
+                        <button type="reset" class="btn btn-outline-secondary px-4">
+
+                            Clear Form
+
+                        </button>
+
+
+
+                        <!-- Preview -->
+
+                        <button type="button" class="btn btn-outline-primary px-4" onclick="previewProject()">
+
+                            Preview
+
+                        </button>
+
+
+
+                        <!-- Generate PDF -->
+
+                        <button type="submit" class="btn btn-generate">
+
+                            Generate PDF
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+            </form>
 
         </div>
 
     </div>
 
+</main>
 
-
-    <!-- Bootstrap JavaScript -->
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
-    </script>
-
-
-
-    <!-- ================= JAVASCRIPT ================= -->
-
-    <script>
-
-        /* Get jsPDF */
-
-        const { jsPDF } = window.jspdf;
-
-
-
-        /* ================= GET FORM DATA ================= */
-
-        function getData() {
-
-            return {
-
-                title:
-                    document.getElementById("title").value.trim(),
-
-                studentName:
-                    document.getElementById("studentName").value.trim(),
-
-                department:
-                    document.getElementById("department").value.trim(),
-
-                abstract:
-                    document.getElementById("abstract").value.trim(),
-
-                description:
-                    document.getElementById("description").value.trim(),
-
-                modules:
-                    document.getElementById("modules").value.trim(),
-
-                moduleDetails:
-                    document.getElementById("moduleDetails").value.trim(),
-
-                literature:
-                    document.getElementById("literature").value.trim(),
-
-                technology:
-                    document.getElementById("technology").value.trim(),
-
-                duration:
-                    document.getElementById("duration").value.trim(),
-
-                objectives:
-                    document.getElementById("objectives").value.trim(),
-
-                futureScope:
-                    document.getElementById("futureScope").value.trim(),
-
-                additional:
-                    document.getElementById("additional").value.trim()
-
-            };
-        }
-
-        /* ================= ESCAPE HTML ================= */
-
-        function escapeHTML(text) {
-
-            return text.replace(/[&<>"']/g, function (char) {
-
-                return {
-
-                    "&": "&amp;",
-                    "<": "&lt;",
-                    ">": "&gt;",
-                    '"': "&quot;",
-                    "'": "&#039;"
-
-                }[char];
-
-            });
-
-        }
-
-        /* ================= PREVIEW ================= */
-
-        function previewProject() {
-
-            const form =
-                document.getElementById("projectForm");
-
-            if (!form.checkValidity()) {
-
-                form.reportValidity();
-
-                return;
-
-            }
-
-            const d = getData();
-
-            document.getElementById("previewContent").innerHTML = `
-
-        <h3 class="fw-bold">
-            ${escapeHTML(d.title)}
-        </h3>
-
-        <hr>
-
-        <h6 class="fw-bold">
-            Student Information
-        </h6>
-
-        <p>
-            <strong>Name:</strong>
-            ${escapeHTML(d.studentName || "Not provided")}
-        </p>
-
-        <p>
-            <strong>Department:</strong>
-            ${escapeHTML(d.department || "Not provided")}
-        </p>
-
-        <h6 class="fw-bold mt-4">
-            Abstract
-        </h6>
-
-        <p>
-            ${escapeHTML(d.abstract)}
-        </p>
-
-        <h6 class="fw-bold mt-4">
-            Project Description
-        </h6>
-
-        <p>
-            ${escapeHTML(d.description)}
-        </p>
-
-        <h6 class="fw-bold mt-4">
-            Modules
-        </h6>
-
-        <p>
-            <strong>Number:</strong>
-            ${escapeHTML(d.modules)}
-        </p>
-
-        <p>
-            ${escapeHTML(d.moduleDetails || "Not provided")}
-        </p>
-
-        <h6 class="fw-bold mt-4">
-            Literature Survey
-        </h6>
-
-        <p>
-            ${escapeHTML(d.literature)}
-        </p>
-
-        <h6 class="fw-bold mt-4">
-            Other Details
-        </h6>
-
-        <p>
-            <strong>Technologies:</strong>
-            ${escapeHTML(d.technology || "Not provided")}
-        </p>
-
-        <p>
-            <strong>Duration:</strong>
-            ${escapeHTML(d.duration || "Not provided")}
-        </p>
-
-        <p>
-            <strong>Objectives:</strong><br>
-            ${escapeHTML(d.objectives || "Not provided")}
-        </p>
-
-        <p>
-            <strong>Future Scope:</strong><br>
-            ${escapeHTML(d.futureScope || "Not provided")}
-        </p>
-
-        <p>
-            <strong>Additional Details:</strong><br>
-            ${escapeHTML(d.additional || "Not provided")}
-        </p>
-
-    `;
-
-            new bootstrap.Modal(
-                document.getElementById("previewModal")
-            ).show();
-
-        }
-        /* ================= PDF TEXT ================= */
-
-        function addWrappedText(
-            doc,
-            text,
-            x,
-            y,
-            maxWidth,
-            lineHeight = 6
-        ) {
-
-            const lines =
-                doc.splitTextToSize(
-                    text || "Not provided",
-                    maxWidth
-                );
-
-            for (const line of lines) {
-
-                if (y > 275) {
-
-                    doc.addPage();
-
-                    y = 20;
-
-                }
-
-                doc.text(line, x, y);
-
-                y += lineHeight;
-
-            }
-
-            return y;
-
-        }
-
-
-        /* ================= PDF SECTION ================= */
-
-        function addSection(
-            doc,
-            heading,
-            content,
-            y
-        ) {
-
-            if (y > 260) {
-
-                doc.addPage();
-
-                y = 20;
-
-            }
-
-            doc.setFont("helvetica", "bold");
-
-            doc.setFontSize(13);
-
-            doc.text(
-                heading,
-                20,
-                y
-            );
-
-            y += 8;
-
-            doc.setFont("helvetica", "normal");
-
-            doc.setFontSize(10);
-
-            y = addWrappedText(
-                doc,
-                content,
-                20,
-                y,
-                170,
-                5.5
-            );
-
-            return y + 7;
-        }
-        /* ================= GENERATE PDF ================= */
-
-        function generatePDF() {
-
-            const d = getData();
-
-            const doc = new jsPDF();
-
-            doc.setFont("helvetica", "bold");
-
-            doc.setFontSize(22);
-
-            doc.text(
-                "PROJECT DETAILS",
-                105,
-                30,
-                {
-                    align: "center"
-                }
-            );
-
-            doc.setFontSize(16);
-
-            const titleLines =
-                doc.splitTextToSize(
-                    d.title,
-                    165
-                );
-
-            doc.text(
-                titleLines,
-                105,
-                48,
-                {
-                    align: "center"
-                }
-            );
-
-            doc.setFont("helvetica", "normal");
-
-            doc.setFontSize(10);
-
-            doc.text(
-                "Project Documentation",
-                105,
-                65,
-                {
-                    align: "center"
-                }
-            );
-
-            let y = 85;
-
-            doc.setFontSize(10);
-
-            if (d.studentName) {
-
-                doc.text(
-                    "Student: " + d.studentName,
-                    20,
-                    y
-                );
-
-                y += 6;
-
-            }
-
-            if (d.department) {
-
-                doc.text(
-                    "Department / Course: " + d.department,
-                    20,
-                    y
-                );
-
-                y += 6;
-
-            }
-
-            if (d.duration) {
-
-                doc.text(
-                    "Duration: " + d.duration,
-                    20,
-                    y
-                );
-
-                y += 6;
-
-            }
-
-            y += 10;
-
-            y = addSection(
-                doc,
-                "1. ABSTRACT",
-                d.abstract,
-                y
-            );
-
-            y = addSection(
-                doc,
-                "2. PROJECT DESCRIPTION",
-                d.description,
-                y
-            );
-
-            y = addSection(
-                doc,
-                "3. PROJECT MODULES",
-                "Number of Modules: " +
-                d.modules +
-                "\nModule Details: " +
-                (d.moduleDetails || "Not provided"),
-                y
-            );
-
-            y = addSection(
-                doc,
-                "4. LITERATURE SURVEY",
-                d.literature,
-                y
-            );
-
-            y = addSection(
-                doc,
-                "5. TECHNOLOGIES USED",
-                d.technology,
-                y
-            );
-
-            y = addSection(
-                doc,
-                "6. PROJECT OBJECTIVES",
-                d.objectives,
-                y
-            );
-
-            y = addSection(
-                doc,
-                "7. FUTURE SCOPE",
-                d.futureScope,
-                y
-            );
-
-            y = addSection(
-                doc,
-                "8. ADDITIONAL PROJECT DETAILS",
-                d.additional,
-                y
-            );
-            /* ================= PAGE NUMBERS ================= */
-
-            const pageCount =
-                doc.internal.getNumberOfPages();
-
-            for (
-                let i = 1;
-                i <= pageCount;
-                i++
-            ) {
-
-                doc.setPage(i);
-
-                doc.setFontSize(8);
-
-                doc.text(
-                    "Project Details Generator | Page "
-                    + i +
-                    " of "
-                    + pageCount,
-                    105,
-                    290,
-                    {
-                        align: "center"
-                    }
-                );
-
-            }
-
-
-            /* ================= FILE NAME ================= */
-
-            const safeName =
-                d.title
-                    .replace(/[^a-z0-9]/gi, "_")
-                    .replace(/_+/g, "_")
-                    .substring(0, 50)
-                || "project";
-
-            doc.save(
-                safeName +
-                "_Project_Details.pdf"
-            );
-
-        }
-
-
-        /* ================= FORM SUBMIT ================= */
-
-        document
-            .getElementById("projectForm")
-            .addEventListener(
-                "submit",
-                function (event) {
-
-                    event.preventDefault();
-
-                    if (!this.checkValidity()) {
-
-                        this.reportValidity();
-
-                        return;
-
-                    }
-
-                    generatePDF();
-
-                }
-            );
-
-    </script>
-
-</body>
-
-</html>
+{%endblock%}
