@@ -13,9 +13,9 @@ h1 {
 
 
 
-/*Project_Form CSS/*
+/* Project_Form CSS */
 
-        /* ================= BODY ================= */
+/* ================= BODY ================= */
 
 body {
     min-height: 100vh;
@@ -245,4 +245,114 @@ textarea {
 .required::after {
     content: " *";
     color: #000000;
+}
+
+
+
+
+
+
+
+
+/* Preview Page CSS */
+
+.preview-body {
+    margin: 0;
+    padding: 40px;
+
+    background: #ffffff;
+    color: #000000;
+
+    font-family: Arial, sans-serif;
+}
+
+
+.preview-container {
+    max-width: 900px;
+
+    margin: auto;
+
+    background: #ffffff;
+
+    border: 1px solid #555555;
+    border-radius: 8px;
+
+    padding: 35px;
+}
+
+
+/* Main heading */
+
+.preview-title {
+    text-align: center;
+
+    font-size: 26px;
+    font-weight: 600;
+
+    margin-bottom: 35px;
+}
+
+
+/* Sections */
+
+.preview-section {
+    padding: 20px 0;
+
+    border-bottom: 1px solid #555555;
+}
+
+
+.preview-section:last-of-type {
+    border-bottom: none;
+}
+
+
+.preview-section h2 {
+    font-size: 19px;
+    font-weight: 600;
+
+    margin: 0 0 18px 0;
+}
+
+
+/* Details */
+
+.detail {
+    margin-bottom: 15px;
+}
+
+
+.detail:last-child {
+    margin-bottom: 0;
+}
+
+
+.detail-title {
+    font-size: 13px;
+    font-weight: 600;
+
+    margin-bottom: 5px;
+}
+
+
+.detail-content {
+    font-size: 14px;
+
+    line-height: 1.6;
+
+    color: #333333;
+
+    white-space: pre-wrap;
+}
+
+/* Buttons */
+
+.button-container {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-top: 30px;
 }

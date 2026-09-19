@@ -1,0 +1,203 @@
+{% set show_dashboard = true %}
+{%extends "layout.html"%}
+{%block title%}
+Preview
+{%endblock%}
+
+{%block content%}
+
+
+<div class="preview-body">
+
+
+    <div class="preview-container" id="previewContent">
+
+
+        <div class="preview-title">
+            Project Details Preview
+        </div>
+
+
+        <!-- BASIC INFORMATION -->
+
+        <div class="preview-section">
+
+            <h2>Basic Information</h2>
+
+
+            <div class="detail">
+
+                <div class="detail-title">
+                    Project Title
+                </div>
+
+                <div class="detail-content">
+                    {{title}}
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-title">
+                    Student Name
+                </div>
+
+                <div class="detail-content">
+                    {{name}}
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-title">
+                    Department / Course
+                </div>
+
+                <div class="detail-content">
+                    {{dept}}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ABSTRACT -->
+
+        <div class="preview-section">
+
+            <h2>Abstract</h2>
+
+            <div class="detail-content">
+                {{abstract}}
+            </div>
+
+        </div>
+
+
+        <!-- PROJECT DESCRIPTION -->
+
+        <div class="preview-section">
+
+            <h2>Project Description</h2>
+
+            <div class="detail-content">
+                {{description}}
+            </div>
+
+        </div>
+
+
+        <!-- PROJECT MODULES -->
+
+        <div class="preview-section">
+
+            <h2>Project Modules</h2>
+
+            <div class="detail">
+                {%for module in modules%}
+                <div class="detail-title">
+                    {{loop.index}}.{{module.name}}
+                </div>
+                <div class="detail-content">
+                    {{module.description}}
+                </div>
+                {%endfor%}
+
+
+            </div>
+        </div>
+
+
+        <!-- LITERATURE SURVEY -->
+
+        <div class="preview-section">
+
+            <h2>Literature Survey</h2>
+
+            <div class="detail-content">
+                {{survey}}
+            </div>
+
+        </div>
+
+
+        <!-- OTHER PROJECT DETAILS -->
+
+        <div class="preview-section">
+
+            <h2>Other Project Details</h2>
+
+
+            <div class="detail">
+
+                <div class="detail-title">
+                    Technologies Used
+                </div>
+
+                <div class="detail-content">
+                    {{technologies}}
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-title">
+                    Project Duration
+                </div>
+
+                <div class="detail-content">
+                    {{duration}}
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-title">
+                    Additional Details
+                </div>
+
+                <div class="detail-content">
+                    {{additional}}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="button-container">
+
+            <a href="{{ url_for('project_form',edit=1) }}"
+                class="btn btn-outline-light d-flex align-items-center justify-content-center">
+                Edit Project
+            </a>
+
+
+            <button class="btn btn-generate">
+                Confirm
+            </button>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+{%endblock%}

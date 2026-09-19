@@ -13,55 +13,92 @@ if (flashModal) {
     modal.show();
 }
 
+
+
 // Dynamic Module Generation
+
+// Persistence Implementation
+function createModules(count, existingModules = []) {
+
+    const currentCount = moduleContainer.children.length;
+
+    // Add modules (User increases Module Count)
+    if (count > currentCount) {
+
+        for (let i = currentCount + 1; i <= count; i++) {
+
+            const module = existingModules[i - 1] || {};
+
+            moduleContainer.insertAdjacentHTML("beforeend", `
+                <div class="module mb-4">
+
+                    <h5 class="mb-3">Module ${i}</h5>
+
+                    <div class="mb-3">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="module_name_${i}"
+                            placeholder="Module Name"
+                            value="${module.name || ""}">
+                    </div>
+
+                    <div class="mb-3">
+                        <textarea
+                            class="form-control"
+                            name="module_description_${i}"
+                            rows="4"
+                            placeholder="Module Description">${module.description || ""}</textarea>
+                    </div>
+
+                </div>
+            `);
+        }
+    }
+
+    // Remove modules (When the user decreases Module Count)
+    else if (count < currentCount) {
+
+        while (moduleContainer.children.length > count) {
+            moduleContainer.lastElementChild.remove();
+        }
+    }
+}
+
 
 const moduleCount = document.getElementById("modules");
 const moduleContainer = document.getElementById("moduleContainer");
+
+const existingModulesElement = document.getElementById("existingModules");
+
+const existingModules = existingModulesElement
+    ? JSON.parse(existingModulesElement.dataset.modules)
+    : [];
+
 if (moduleCount && moduleContainer) {
-    moduleCount.addEventListener("input", function () {
-        const count = parseInt(moduleCount.value);
-        if (isNaN(count)) {
-            return
-        }
-        const currentCount = moduleContainer.children.length;
 
-
-        if (count > currentCount) {
-
-
-            for (let i = currentCount + 1; i <= count; i++) {
-                moduleContainer.insertAdjacentHTML("beforeend", `
-                    <div class="module mb-4">
-                        <h5 class="mb-3">Module ${i}</h5>
-
-                        <div class="mb-3">
-            
-                            <input type="text"
-                            class="form-control"
-                            name="module_name_${i}"
-                            placeholder="Module Name">
-                        </div>
-
-                        <div class="mb-3">
-            
-                            <textarea class="form-control"
-                            name="module_description_${i}"
-                            rows="4"
-                            placeholder="Module Description"></textarea>
-                        </div>
-                    </div>
-                `);
-            }
-
-        }
-        else if (count < currentCount) {
-            while (moduleContainer.children.length > count) {
-                moduleContainer.lastElementChild.remove();
-            }
-        }
+    // Restore saved modules when editing (Persistence)
+    if (existingModules.length > 0) {
+        createModules(existingModules.length, existingModules);
     }
-    )
-};
+
+    moduleCount.addEventListener("input", function () {
+
+        const count = parseInt(moduleCount.value);
+
+        if (isNaN(count)) {
+            return;
+        }
+
+        createModules(count);
+    });
+}
+
+
+
+
+
+
 
 
 // Clearing Forms

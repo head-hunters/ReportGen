@@ -74,7 +74,7 @@ Project Form
 
                         </label>
 
-                        <input type="text" class="form-control" id="title" name="title"
+                        <input type="text" class="form-control" id="title" value="{{title or ''}}" name="title"
                             placeholder="Example: Smart Campus Management System" required>
 
                     </div>
@@ -92,7 +92,7 @@ Project Form
 
                             </label>
 
-                            <input type="text" class="form-control" id="studentName" name="name"
+                            <input type="text" class="form-control" value="{{name or ''}}" id="studentName" name="name"
                                 placeholder="Enter your name">
 
                         </div>
@@ -106,7 +106,7 @@ Project Form
 
                             </label>
 
-                            <input type="text" class="form-control" id="department" name="dept"
+                            <input type="text" class="form-control" value="{{dept or ''}}" id="department" name="dept"
                                 placeholder="Example: BCA (Cyber Security)">
 
                         </div>
@@ -139,7 +139,7 @@ Project Form
 
                     <textarea class="form-control" id="abstract" rows="5" name="abstract"
                         placeholder="Write a brief summary of your project, its purpose, and expected outcome..."
-                        required></textarea>
+                        required>{{abstract or ''}}</textarea>
 
                 </div>
 
@@ -167,7 +167,7 @@ Project Form
 
                     <textarea class="form-control" id="description" name="description" rows="7"
                         placeholder="Describe the problem, proposed solution, technologies used, features, and working process..."
-                        required></textarea>
+                        required>{{description or ''}}</textarea>
 
                 </div>
 
@@ -198,7 +198,8 @@ Project Form
                             </label>
 
 
-                            <input type="number" class="form-control" id="modules" name="modules" min="0" max="50"
+                            <input type="number" onwheel="this.blur()" class="form-control" id="modules"
+                                value="{{ modules|length if modules else '' }}" name="modules" max="50"
                                 placeholder="Example: 5" required>
 
                         </div>
@@ -238,7 +239,7 @@ Project Form
 
                     <textarea class="form-control" id="literature" name="survey" rows="6"
                         placeholder="Enter your literature survey, references, previous systems, research findings, etc..."
-                        required></textarea>
+                        required>{{survey or ''}}</textarea>
 
                 </div>
 
@@ -271,8 +272,8 @@ Project Form
                             </label>
 
 
-                            <input type="text" class="form-control" id="technology" name="technologies"
-                                placeholder="Example: HTML, CSS, Bootstrap, PHP, MySQL">
+                            <input type="text" class="form-control" id="technology" value="{{technologies or ''}}"
+                                name="technologies" placeholder="Example: HTML, CSS, Bootstrap, PHP, MySQL">
 
                         </div>
 
@@ -289,8 +290,8 @@ Project Form
                             </label>
 
 
-                            <input type="text" class="form-control" id="duration" name="duration"
-                                placeholder="Example: 3 Months">
+                            <input type="text" class="form-control" id="duration" value="{{duration or ''}}"
+                                name="duration" placeholder="Example: 3 Months">
 
                         </div>
 
@@ -316,7 +317,7 @@ Project Form
 
 
                             <textarea class="form-control" id="additional" name="additional" rows="4"
-                                placeholder="Any other information you want to include..."></textarea>
+                                placeholder="Any other information you want to include...">{{additional or ''}}</textarea>
 
                         </div>
 
@@ -335,11 +336,11 @@ Project Form
 
                         <!-- Clear Form -->
 
-                        <button type="reset" class="btn btn-outline-secondary px-4">
-
+                        <a href="{{url_for('clear_project')}}"
+                            class="btn btn-outline-light d-flex align-items-center justify-content-center">
                             Clear Form
+                        </a>
 
-                        </button>
 
 
 
@@ -368,5 +369,8 @@ Project Form
     </div>
 
 </main>
+
+<div id="existingModules" data-modules='{{ modules | default([]) | tojson | e }}'>
+</div>
 
 {%endblock%}

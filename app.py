@@ -141,28 +141,45 @@ def project_form():
                     "description": request.form.get(f"module_description_{i}"),
                 }
             )
+        session["preview_data"] = {
+            "title": title,
+            "name": name,
+            "dept": dept,
+            "abstract": abstract,
+            "description": description,
+            "survey": survey,
+            "technologies": technologies,
+            "duration": duration,
+            "additional": additional,
+            "modules": modules,
+        }
+        return redirect(url_for("preview"))
 
-        return render_template(
-            "preview.html",
-            title=title,
-            name=name,
-            dept=dept,
-            abstract=abstract,
-            description=description,
-            survey=survey,
-            technologies=technologies,
-            duration=duration,
-            additional=additional,
-            modules=modules,
-        )
     else:
+        if request.args.get("edit") == "1":
+
+            data = session.get("preview_data")
+
+            return render_template("project_form.html", **data if data else {})
+        session.pop("preview_data", None)
         return render_template("project_form.html")
 
 
 @app.route("/preview.html")
 @login_required
 def preview():
-    return render_template("preview.html")
+    data = session.get("preview_data")
+    if not data:
+        return redirect(url_for("project_form"))
+
+    return render_template("preview.html", **data)
+
+
+@app.route("/clear_project")
+@login_required
+def clear_project():
+    session.pop("preview_data", None)
+    return redirect(url_for("project_form"))
 
 
 if __name__ == "__main__":
