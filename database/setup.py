@@ -11,7 +11,7 @@ def init_db():
             password_hash TEXT NOT NULL
         );
         
-        CREATE TABLE projects (
+        CREATE TABLE IF NOT EXISTS projects (
             project_id INTEGER PRIMARY KEY,
             user_id INTEGER NOT NULL,
             title TEXT,
@@ -26,7 +26,7 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES users(id)
         );
 
-        CREATE TABLE modules (
+        CREATE TABLE IF NOT EXISTS modules (
             module_id INTEGER PRIMARY KEY,
             project_id INTEGER NOT NULL,
             module_number INTEGER NOT NULL,

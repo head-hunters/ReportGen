@@ -48,7 +48,7 @@ Project Form
         <div class="card-body p-4 p-md-5">
 
 
-            <form method="POST" action="{{url_for('project_form')}}">
+            <form id="projectForm" method="POST" action="{{url_for('project_form')}}">
 
 
                 <!--info-->
@@ -345,7 +345,7 @@ Project Form
 
                         <!-- Preview -->
 
-                        <button type="button" class="btn btn-outline-primary px-4" onclick="previewProject()">
+                        <button type="submit" class="btn btn-generate">
 
                             Preview
 
@@ -353,13 +353,8 @@ Project Form
 
 
 
-                        <!-- Generate PDF -->
 
-                        <button type="submit" class="btn btn-generate">
 
-                            Generate PDF
-
-                        </button>
 
                     </div>
 
