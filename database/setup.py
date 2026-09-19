@@ -4,12 +4,12 @@ import sqlite3
 def init_db():
     db = sqlite3.connect("database/app.db")
 
-    db.execute("""
+    db.executescript("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY,
             email TEXT NOT NULL UNIQUE,
             password_hash TEXT NOT NULL
-        )
+        );
         
         CREATE TABLE projects (
             project_id INTEGER PRIMARY KEY,
@@ -24,7 +24,7 @@ def init_db():
             duration TEXT,
             additional TEXT,
             FOREIGN KEY (user_id) REFERENCES users(id)
-        )
+        );
 
         CREATE TABLE modules (
             module_id INTEGER PRIMARY KEY,
@@ -33,7 +33,7 @@ def init_db():
             name TEXT,
             description TEXT,
             FOREIGN KEY (project_id) REFERENCES projects(project_id)
-        )
+        );
     """)
 
     db.commit()
