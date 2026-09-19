@@ -1,22 +1,35 @@
 from flask import Flask, flash, redirect, render_template, request, session, url_for
-import sqlite3
+from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
+
+import sqlite3
 
 app = Flask(__name__)
 app.secret_key = "your-secret-key"
 
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "user_id" not in session:
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
 @app.route("/")
 def index():
-    return redirect(url_for("register"))
+    if "user_id" not in session:
+        return redirect(url_for("register"))
+    return redirect(url_for("dashboard"))
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
-    db = sqlite3.connect("database/app.db")
-
     if request.method == "POST":
+        db = sqlite3.connect("database/app.db")
         email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm")
@@ -86,6 +99,7 @@ def login():
 
 
 @app.route("/dashboard.html")
+@login_required
 def dashboard():
     db = sqlite3.connect("database/app.db")
     db.row_factory = sqlite3.Row
@@ -96,15 +110,60 @@ def dashboard():
 
     name = name["email"].split("@")[0].capitalize()
 
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-
     return render_template("dashboard.html", name=name)
 
 
-@app.route("/project_form.html")
-def project():
-    return render_template("project_form.html")
+@app.route("/project_form.html", methods=["GET", "POST"])
+@login_required
+def project_form():
+    if request.method == "POST":
+
+        db = sqlite3.connect("database/app.db")
+        db.row_factory = sqlite3.Row
+
+        # project details
+        title = request.form.get("title")
+        name = request.form.get("name")
+        dept = request.form.get("dept")
+        abstract = request.form.get("abstract")
+        description = request.form.get("description")
+        survey = request.form.get("survey")
+        technologies = request.form.get("technologies")
+        duration = request.form.get("duration")
+        additional = request.form.get("additional")
+
+        cursor = db.execute(
+            "INSERT INTO projects (user_id,title,name,dept,abstract,description,survey,technologies,duration,additional) VALUES(?,?,?,?,?,?,?,?,?,?)",
+            (
+                session["user_id"],
+                title,
+                name,
+                dept,
+                abstract,
+                description,
+                survey,
+                technologies,
+                duration,
+                additional,
+            ),
+        )
+        project_id = cursor.lastrowid
+
+        # module details
+
+        module_count = int(request.form.get("modules"))
+        for i in range(1, module_count + 1):
+            module_name = request.form.get(f"module_name_{i}")
+            module_description = request.form.get(f"module_description_{i}")
+            db.execute(
+                "INSERT INTO modules (project_id,module_number,name,description)VALUES(?,?,?,?)",
+                (project_id, i, module_name, module_description),
+            )
+        db.commit()
+        db.close()
+        return render_template("project_form.html")
+    else:
+        return render_template("project_form.html")
 
 
 if __name__ == "__main__":
