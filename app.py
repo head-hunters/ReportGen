@@ -118,9 +118,6 @@ def dashboard():
 def project_form():
     if request.method == "POST":
 
-        db = sqlite3.connect("database/app.db")
-        db.row_factory = sqlite3.Row
-
         # project details
         title = request.form.get("title")
         name = request.form.get("name")
@@ -132,38 +129,40 @@ def project_form():
         duration = request.form.get("duration")
         additional = request.form.get("additional")
 
-        cursor = db.execute(
-            "INSERT INTO projects (user_id,title,name,dept,abstract,description,survey,technologies,duration,additional) VALUES(?,?,?,?,?,?,?,?,?,?)",
-            (
-                session["user_id"],
-                title,
-                name,
-                dept,
-                abstract,
-                description,
-                survey,
-                technologies,
-                duration,
-                additional,
-            ),
-        )
-        project_id = cursor.lastrowid
-
         # module details
+
+        modules = []
 
         module_count = int(request.form.get("modules"))
         for i in range(1, module_count + 1):
-            module_name = request.form.get(f"module_name_{i}")
-            module_description = request.form.get(f"module_description_{i}")
-            db.execute(
-                "INSERT INTO modules (project_id,module_number,name,description)VALUES(?,?,?,?)",
-                (project_id, i, module_name, module_description),
+            modules.append(
+                {
+                    "name": request.form.get(f"module_name_{i}"),
+                    "description": request.form.get(f"module_description_{i}"),
+                }
             )
-        db.commit()
-        db.close()
-        return render_template("project_form.html")
+
+        return render_template(
+            "preview.html",
+            title=title,
+            name=name,
+            dept=dept,
+            abstract=abstract,
+            description=description,
+            survey=survey,
+            technologies=technologies,
+            duration=duration,
+            additional=additional,
+            modules=modules,
+        )
     else:
         return render_template("project_form.html")
+
+
+@app.route("/preview.html")
+@login_required
+def preview():
+    return render_template("preview.html")
 
 
 if __name__ == "__main__":

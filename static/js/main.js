@@ -62,3 +62,13 @@ if (moduleCount && moduleContainer) {
     }
     )
 };
+
+
+// Clearing Forms
+
+const projectForm = document.getElementById("projectForm");
+
+projectForm.addEventListener("reset", function () {
+    moduleContainer.innerHTML = "";
+
+})
