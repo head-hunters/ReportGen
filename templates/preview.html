@@ -101,7 +101,7 @@ Preview
             <div class="detail">
                 {%for module in modules%}
                 <div class="detail-title">
-                    {{loop.index}}.{{module.name}}
+                    {{loop.index}}. {{module.name}}
                 </div>
                 <div class="detail-content">
                     {{module.description}}
@@ -184,20 +184,55 @@ Preview
             </a>
 
 
-            <button class="btn btn-generate">
+
+
+
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-generate" data-bs-toggle="modal" data-bs-target="#confirmation">
                 Confirm
             </button>
+            <!-- Modal -->
+            <div class="modal fade" id="confirmation" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+
+                <div class="modal-dialog modal-dialog-centered">
+
+                    <div class="modal-content confirmation-modal">
+
+
+
+                        <div class="modal-body">
+                            Generate PDF?
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+
+
+                            <form method="POST" action="{{url_for('confirm')}}">
+                                <button type="submit" class="btn btn-generate">
+                                    Generate PDF
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+
+
+
+
 
         </div>
-
-
     </div>
 </div>
-
-
-
-
-
-
-
 {%endblock%}

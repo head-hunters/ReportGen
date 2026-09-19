@@ -182,5 +182,73 @@ def clear_project():
     return redirect(url_for("project_form"))
 
 
+@app.route("/confirm", methods=["POST"])
+@login_required
+def confirm():
+    data = session.get("preview_data")
+    if not data:
+        return redirect(url_for("project_form"))
+
+    db = sqlite3.connect("database/app.db")
+
+    cursor = db.execute(
+        """
+    INSERT INTO projects (
+        user_id,
+        title,
+        name,
+        dept,
+        abstract,
+        description,
+        survey,
+        technologies,
+        duration,
+        additional
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """,
+        (
+            session["user_id"],
+            data["title"],
+            data["name"],
+            data["dept"],
+            data["abstract"],
+            data["description"],
+            data["survey"],
+            data["technologies"],
+            data["duration"],
+            data["additional"],
+        ),
+    )
+
+    project_id = cursor.lastrowid
+
+    for i, module in enumerate(data["modules"], start=1):
+
+        db.execute(
+            """
+        INSERT INTO modules (
+            project_id,
+            module_number,
+            name,
+            description
+        )
+        VALUES (?, ?, ?, ?)
+        """,
+            (
+                project_id,
+                i,
+                module["name"],
+                module["description"],
+            ),
+        )
+
+    db.commit()
+    db.close()
+    session.pop("preview_data", None)
+
+    return redirect(url_for("dashboard"))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
