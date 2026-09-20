@@ -193,6 +193,7 @@ def project_form():
 
         if project_id:
             preview_data["project_id"] = project_id
+            preview_data["editing"] = True
 
         session["preview_data"] = preview_data
         return redirect(url_for("preview"))
@@ -234,7 +235,9 @@ def preview():
             return redirect(url_for("project_form"))
 
         return render_template(
-            "preview.html", **data, existing_project="project_id" in data
+            "preview.html",
+            **data,
+            existing_project="project_id" in data,
         )
 
 

@@ -187,17 +187,33 @@ Preview
 
 
             {% if existing_project %}
-            <a href="{{ url_for('edit',project_id=project_id)}}"
+
+            {% if editing %}
+            <a href="{{ url_for('edit', project_id=project_id) }}"
+                class="btn btn-outline-light d-flex align-items-center justify-content-center">
+                Go Back
+            </a>
+
+            {% else %}
+            <a href="{{ url_for('dashboard') }}"
                 class="btn btn-outline-light d-flex align-items-center justify-content-center">
                 Go Back
             </a>
             {% endif %}
+            {%endif%}
+
+
+
+
+
 
             <!-- Button trigger modal -->
 
+            {%if not existing_project or editing%}
             <button type="button" class="btn btn-generate" data-bs-toggle="modal" data-bs-target="#confirmation">
                 Confirm
             </button>
+            {%endif%}
             <!-- Modal -->
             <div class="modal fade" id="confirmation" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
