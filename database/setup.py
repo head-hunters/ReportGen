@@ -13,6 +13,7 @@ def init_db():
         
         CREATE TABLE IF NOT EXISTS projects (
             project_id INTEGER PRIMARY KEY,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             user_id INTEGER NOT NULL,
             title TEXT,
             name TEXT,

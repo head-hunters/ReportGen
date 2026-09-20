@@ -1,6 +1,13 @@
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import HRFlowable
 
 import sqlite3
 
@@ -110,7 +117,35 @@ def dashboard():
 
     name = name["email"].split("@")[0].capitalize()
 
-    return render_template("dashboard.html", name=name)
+    # Displaying Project Info in Dashboard's Cards
+
+    projects = db.execute(
+        """
+    SELECT *
+    FROM projects
+    WHERE user_id = ?
+    ORDER BY created_at DESC
+    """,
+        (session["user_id"],),
+    ).fetchall()
+
+    # Formatting the date
+    new_projects = []
+
+    for project in projects:
+
+        project_dict = dict(project)
+
+        display_date = datetime.fromisoformat(project["created_at"]).strftime("%d %B")
+
+        project_dict["date"] = display_date
+
+        new_projects.append(project_dict)
+
+    projects = new_projects
+
+    db.close()
+    return render_template("dashboard.html", name=name, projects=projects)
 
 
 @app.route("/project_form.html", methods=["GET", "POST"])
@@ -245,9 +280,140 @@ def confirm():
 
     db.commit()
     db.close()
+
+    generate_pdf(data)
+
     session.pop("preview_data", None)
 
     return redirect(url_for("dashboard"))
+
+
+# PDF Generation and Styles
+
+
+def get_pdf_styles():
+
+    styles = getSampleStyleSheet()
+
+    return {
+        "title": ParagraphStyle(
+            "ProjectTitle",
+            parent=styles["Title"],
+            alignment=TA_CENTER,
+            fontSize=20,
+            spaceAfter=6,
+        ),
+        "project_title": ParagraphStyle(
+            "ProjectName",
+            parent=styles["Normal"],
+            alignment=TA_CENTER,
+            fontSize=14,
+            spaceAfter=25,
+        ),
+        "heading": ParagraphStyle(
+            "SectionHeading",
+            parent=styles["Heading2"],
+            fontSize=14,
+            spaceBefore=10,
+            spaceAfter=10,
+        ),
+        "subheading": ParagraphStyle(
+            "Subheading",
+            parent=styles["Heading3"],
+            fontSize=11,
+            spaceBefore=8,
+            spaceAfter=4,
+        ),
+        "body": ParagraphStyle(
+            "Body",
+            parent=styles["BodyText"],
+            fontSize=10,
+            leading=15,
+            spaceAfter=10,
+        ),
+        "separator": {
+            "width": "100%",
+            "thickness": 1.0,
+            "spaceBefore": 5,
+            "spaceAfter": 0,
+        },
+    }
+
+
+def add_page_number(canvas, document):
+    canvas.saveState()
+
+    canvas.setFont("Helvetica", 9)
+
+    canvas.drawCentredString(A4[0] / 2, 30, f"Page {document.page}")
+
+    canvas.restoreState()
+
+
+def generate_pdf(data):
+
+    pdf = SimpleDocTemplate("reports-temp/project_report.pdf", pagesize=A4)
+
+    styles = get_pdf_styles()
+
+    story = []
+
+    # Title
+    story.append(Paragraph("PROJECT REPORT", styles["title"]))
+
+    story.append(Paragraph(data["title"], styles["project_title"]))
+
+    # Basic Information
+    story.append(Paragraph(f"Student: {data['name']}", styles["body"]))
+
+    story.append(Paragraph(f"Department / Course: {data['dept']}", styles["body"]))
+
+    story.append(Paragraph(f"Duration: {data['duration']}", styles["body"]))
+
+    story.append(HRFlowable(**styles["separator"]))
+
+    # Project Description
+    story.append(Paragraph("PROJECT DESCRIPTION", styles["heading"]))
+
+    story.append(Paragraph(data["description"], styles["body"]))
+
+    story.append(HRFlowable(**styles["separator"]))
+
+    # Modules
+    story.append(Paragraph("MODULES", styles["heading"]))
+
+    for i, module in enumerate(data["modules"], start=1):
+
+        story.append(Paragraph(f"{i}. {module['name']}", styles["subheading"]))
+
+        story.append(Paragraph(module["description"], styles["body"]))
+
+    story.append(HRFlowable(**styles["separator"]))
+
+    # Literature Survey
+    story.append(Paragraph("LITERATURE SURVEY", styles["heading"]))
+
+    story.append(Paragraph(data["survey"], styles["body"]))
+
+    story.append(HRFlowable(**styles["separator"]))
+    # Other Project Details
+    story.append(Paragraph("OTHER PROJECT DETAILS", styles["heading"]))
+
+    story.append(Paragraph("Technologies Used", styles["subheading"]))
+
+    story.append(Paragraph(data["technologies"], styles["body"]))
+
+    story.append(Paragraph("Duration", styles["subheading"]))
+
+    story.append(Paragraph(data["duration"], styles["body"]))
+
+    story.append(Paragraph("Additional Details", styles["subheading"]))
+
+    story.append(Paragraph(data["additional"], styles["body"]))
+
+    story.append(HRFlowable(**styles["separator"]))
+
+    pdf.build(story, onFirstPage=add_page_number, onLaterPages=add_page_number)
 
 
 if __name__ == "__main__":

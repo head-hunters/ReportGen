@@ -8,11 +8,58 @@ Dashboard
 <div class="dashboard text-center">
 
     <h1 class="display-4">Welcome, {{name}}</h1>
-    <div class="d-flex justify-content-center gap-3">
+    <div class="d-flex justify-content-center">
 
-        <a href="/project_form.html" class=" btn btn-outline-light" role="button">Create Project Report</a>
+        <a href="{{url_for('project_form')}}" class=" btn btn-outline-light" role="button"
+            style="transform: translateY(30px);">Create
+            Project Report</a>
+
+
+
     </div>
-
+    <h2 class="display-6 "
+        style="text-align:center;margin-top:90px;text-decoration: underline;text-decoration-thickness: 1.5px;">
+        Completed Projects</h2>
 </div>
+
+
+<div class="project-card-container">
+
+    {% for project in projects%}
+    <div class="project-card">
+
+
+
+
+        <h5 class="project-title">
+            {{project["title"]}}
+        </h5>
+
+        <p class="project-date">
+            {{project["date"]}}
+        </p>
+
+        <div class="project-buttons">
+
+            <button type="button" class="project-btn">
+                View
+            </button>
+
+            <button type="button" class="project-btn">
+                Edit
+            </button>
+
+            <button type="button" class="project-btn delete-btn">
+                Delete
+            </button>
+
+        </div>
+
+    </div>
+    {%endfor%}
+</div>
+
+
+
 
 {%endblock%}
