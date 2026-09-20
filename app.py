@@ -409,7 +409,7 @@ def confirm():
     return redirect(url_for("dashboard"))
 
 
-@app.route("/delete", methods=["POST"])
+@app.route("/delete/<int:project_id>", methods=["POST"])
 @login_required
 def delete(project_id):
     db = sqlite3.connect("database/app.db")
@@ -432,7 +432,7 @@ def delete(project_id):
     )
     db.commit()
     db.close()
-    return redirect(url_for("dashbboard"))
+    return redirect(url_for("dashboard"))
 
 
 # PDF Generation and Styles

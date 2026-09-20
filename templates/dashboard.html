@@ -49,11 +49,42 @@ Dashboard
                 Edit
             </a>
 
-            <form method="POST" action="{{ url_for('delete', project_id=project['project_id']) }}">
-                <button type="submit" class="project-btn ">
-                    Delete
-                </button>
-            </form>
+
+            <button type="button" class="project-btn delete-btn" data-bs-toggle="modal"
+                data-bs-target="#delete{{ project['project_id'] }}">
+                Delete
+            </button>
+
+            <div class="modal fade" id="delete{{ project['project_id'] }}" tabindex="-1">
+
+                <div class="modal-dialog modal-dialog-centered">
+
+                    <div class="modal-content confirmation-modal">
+
+                        <div class="modal-body">
+                            Delete this project?
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+
+                            <form method="POST" action="{{ url_for('delete', project_id=project['project_id']) }}">
+
+                                <button type="submit" class="btn btn-generate">
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
 
         </div>
 

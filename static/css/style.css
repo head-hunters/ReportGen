@@ -489,14 +489,16 @@ textarea {
     gap: 4px;
 }
 
-.project-buttons form {
-    margin: 0;
-}
 
 /* Buttons */
 
 .project-btn {
     flex: 1;
+
+
+    height: 28px;
+    box-sizing: border-box;
+
 
     background-color: #000000;
     color: #ffffff;
@@ -508,12 +510,17 @@ textarea {
 
     font-size: 12px;
 
+    line-height: normal;
+    font-family: inherit;
+
     cursor: pointer;
     text-decoration: none;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
+
 
 
 /* Button hover */
