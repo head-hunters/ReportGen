@@ -64,6 +64,7 @@ def register():
             flash("Account already Exists!", "Error")
             return render_template("register.html")
 
+        session["user_id"] = db.lastrowid
         return render_template("dashboard.html")
     else:
         return render_template("register.html")

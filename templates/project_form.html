@@ -199,7 +199,7 @@ Project Form
 
 
                             <input type="number" onwheel="this.blur()" class="form-control" id="modules"
-                                value="{{ modules|length if modules else '' }}" name="modules" max="50"
+                                value="{{ modules|length if modules else '' }}" name="modules" min="0" max="50"
                                 placeholder="Example: 5" required>
 
                         </div>
