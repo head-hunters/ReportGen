@@ -177,18 +177,24 @@ Preview
         <!-- BUTTONS -->
 
         <div class="button-container">
-
+            {%if not existing_project%}
             <a href="{{ url_for('project_form',edit=1) }}"
                 class="btn btn-outline-light d-flex align-items-center justify-content-center">
                 Edit Project
             </a>
+            {%endif%}
 
 
 
-
-
+            {% if existing_project %}
+            <a href="{{ url_for('edit',project_id=project_id)}}"
+                class="btn btn-outline-light d-flex align-items-center justify-content-center">
+                Go Back
+            </a>
+            {% endif %}
 
             <!-- Button trigger modal -->
+
             <button type="button" class="btn btn-generate" data-bs-toggle="modal" data-bs-target="#confirmation">
                 Confirm
             </button>
@@ -200,27 +206,33 @@ Preview
 
                     <div class="modal-content confirmation-modal">
 
-
-
                         <div class="modal-body">
+                            {% if existing_project %}
+                            Submit Changes?
+                            {% else %}
                             Generate PDF?
+                            {% endif %}
                         </div>
 
                         <div class="modal-footer">
+
                             <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">
                                 Cancel
                             </button>
 
-
-                            <form method="POST" action="{{url_for('confirm')}}">
+                            <form method="POST" action="{{ url_for('confirm') }}">
                                 <button type="submit" class="btn btn-generate">
+                                    {% if existing_project %}
+                                    Yes
+                                    {% else %}
                                     Generate PDF
+                                    {% endif %}
                                 </button>
                             </form>
+
                         </div>
 
                     </div>
-
                 </div>
             </div>
 
@@ -230,9 +242,16 @@ Preview
 
 
 
-
-
         </div>
+
+
+
+
+
+
+
+
+
     </div>
 </div>
 {%endblock%}

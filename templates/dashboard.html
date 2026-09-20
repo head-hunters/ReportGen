@@ -41,17 +41,19 @@ Dashboard
 
         <div class="project-buttons">
 
-            <button type="button" class="project-btn">
+            <a href="{{ url_for('preview', project_id=project['project_id']) }}" class="project-btn">
                 View
-            </button>
+            </a>
 
-            <button type="button" class="project-btn">
+            <a href="{{ url_for('edit', project_id=project['project_id']) }}" class="project-btn">
                 Edit
-            </button>
+            </a>
 
-            <button type="button" class="project-btn delete-btn">
-                Delete
-            </button>
+            <form method="POST" action="{{ url_for('delete', project_id=project['project_id']) }}">
+                <button type="submit" class="project-btn ">
+                    Delete
+                </button>
+            </form>
 
         </div>
 

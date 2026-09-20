@@ -333,6 +333,18 @@ Project Form
 
                     <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
 
+                        <!-- Go Back-->
+                        {%if existing_project%}
+
+                        <input type="hidden" name="project_id" value="{{ project_id }}">
+
+
+                        <a href="{{url_for('dashboard')}}"
+                            class="btn btn-outline-light d-flex align-items-center justify-content-center">
+                            Go Back
+                        </a>
+                        {%endif%}
+
 
                         <!-- Clear Form -->
 
@@ -340,6 +352,8 @@ Project Form
                             class="btn btn-outline-light d-flex align-items-center justify-content-center">
                             Clear Form
                         </a>
+
+
 
 
 

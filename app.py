@@ -153,6 +153,8 @@ def dashboard():
 def project_form():
     if request.method == "POST":
 
+        project_id = request.form.get("project_id")
+
         # project details
         title = request.form.get("title")
         name = request.form.get("name")
@@ -176,7 +178,7 @@ def project_form():
                     "description": request.form.get(f"module_description_{i}"),
                 }
             )
-        session["preview_data"] = {
+        preview_data = {
             "title": title,
             "name": name,
             "dept": dept,
@@ -188,6 +190,11 @@ def project_form():
             "additional": additional,
             "modules": modules,
         }
+
+        if project_id:
+            preview_data["project_id"] = project_id
+
+        session["preview_data"] = preview_data
         return redirect(url_for("preview"))
 
     else:
@@ -203,11 +210,32 @@ def project_form():
 @app.route("/preview.html")
 @login_required
 def preview():
-    data = session.get("preview_data")
-    if not data:
-        return redirect(url_for("project_form"))
 
-    return render_template("preview.html", **data)
+    project_id = request.args.get("project_id")
+    if project_id:
+        db = sqlite3.connect("database/app.db")
+        db.row_factory = sqlite3.Row
+        data = db.execute(
+            """SELECT * FROM projects WHERE user_id=? AND project_id=?""",
+            (session["user_id"], project_id),
+        ).fetchone()
+        modules = db.execute(
+            """SELECT * FROM modules WHERE project_id=? ORDER BY module_number""",
+            (project_id,),
+        ).fetchall()
+        modules = [dict(module) for module in modules]  # dictionary conversion
+        db.close()
+        return render_template(
+            "preview.html", **data, modules=modules, existing_project=True
+        )
+    else:
+        data = session.get("preview_data")
+        if not data:
+            return redirect(url_for("project_form"))
+
+        return render_template(
+            "preview.html", **data, existing_project="project_id" in data
+        )
 
 
 @app.route("/clear_project")
@@ -215,6 +243,38 @@ def preview():
 def clear_project():
     session.pop("preview_data", None)
     return redirect(url_for("project_form"))
+
+
+@app.route("/edit/<int:project_id>")
+@login_required
+def edit(project_id):
+
+    # When the user presses the back button and you want the changes to persist
+    preview_data = session.get("preview_data")
+
+    if preview_data and str(preview_data.get("project_id")) == str(project_id):
+        return render_template(
+            "project_form.html", **preview_data, existing_project=True
+        )
+
+    db = sqlite3.connect("database/app.db")
+    db.row_factory = sqlite3.Row
+    data = db.execute(
+        """SELECT * FROM projects WHERE user_id=? AND project_id=?""",
+        (session["user_id"], project_id),
+    ).fetchone()
+    modules = db.execute(
+        """SELECT * FROM modules WHERE project_id=? ORDER BY module_number""",
+        (project_id,),
+    ).fetchall()
+    modules = [dict(module) for module in modules]  # dictionary conversion
+    db.close()
+    return render_template(
+        "project_form.html",
+        **dict(data),
+        modules=modules,
+        existing_project=True,
+    )
 
 
 @app.route("/confirm", methods=["POST"])
@@ -226,50 +286,111 @@ def confirm():
 
     db = sqlite3.connect("database/app.db")
 
-    cursor = db.execute(
-        """
-    INSERT INTO projects (
-        user_id,
-        title,
-        name,
-        dept,
-        abstract,
-        description,
-        survey,
-        technologies,
-        duration,
-        additional
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """,
-        (
-            session["user_id"],
-            data["title"],
-            data["name"],
-            data["dept"],
-            data["abstract"],
-            data["description"],
-            data["survey"],
-            data["technologies"],
-            data["duration"],
-            data["additional"],
-        ),
-    )
-
-    project_id = cursor.lastrowid
-
-    for i, module in enumerate(data["modules"], start=1):
-
+    if "project_id" in data:
+        # This check ensures that the project being edited is an EXISTING project
+        project_id = data["project_id"]
         db.execute(
             """
-        INSERT INTO modules (
-            project_id,
-            module_number,
-            name,
-            description
+            UPDATE projects
+            SET title = ?,
+                name = ?,
+                dept = ?,
+                abstract = ?,
+                description = ?,
+                survey = ?,
+                technologies = ?,
+                duration = ?,
+                additional = ?
+            WHERE project_id = ? AND user_id = ?
+            """,
+            (
+                data["title"],
+                data["name"],
+                data["dept"],
+                data["abstract"],
+                data["description"],
+                data["survey"],
+                data["technologies"],
+                data["duration"],
+                data["additional"],
+                project_id,
+                session["user_id"],
+            ),
         )
-        VALUES (?, ?, ?, ?)
+
+        # To change EXISTING modules
+
+        db.execute(
+            "DELETE FROM modules WHERE project_id = ?",
+            (project_id,),
+        )
+
+    else:
+
+        # New project creation
+        cursor = db.execute(
+            """
+        INSERT INTO projects (
+            user_id,
+            title,
+            name,
+            dept,
+            abstract,
+            description,
+            survey,
+            technologies,
+            duration,
+            additional
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
+            (
+                session["user_id"],
+                data["title"],
+                data["name"],
+                data["dept"],
+                data["abstract"],
+                data["description"],
+                data["survey"],
+                data["technologies"],
+                data["duration"],
+                data["additional"],
+            ),
+        )
+
+        project_id = cursor.lastrowid
+
+        for i, module in enumerate(data["modules"], start=1):
+
+            db.execute(
+                """
+            INSERT INTO modules (
+                project_id,
+                module_number,
+                name,
+                description
+            )
+            VALUES (?, ?, ?, ?)
+            """,
+                (
+                    project_id,
+                    i,
+                    module["name"],
+                    module["description"],
+                ),
+            )
+
+    for i, module in enumerate(data["modules"], start=1):
+        db.execute(
+            """
+            INSERT INTO modules (
+                project_id,
+                module_number,
+                name,
+                description
+            )
+            VALUES (?, ?, ?, ?)
+            """,
             (
                 project_id,
                 i,
@@ -286,6 +407,32 @@ def confirm():
     session.pop("preview_data", None)
 
     return redirect(url_for("dashboard"))
+
+
+@app.route("/delete", methods=["POST"])
+@login_required
+def delete(project_id):
+    db = sqlite3.connect("database/app.db")
+
+    # we're removing the modules first because of the foreign key relationship
+    db.execute(
+        """
+        DELETE FROM modules
+        WHERE project_id = ?
+        """,
+        (project_id,),
+    )
+
+    db.execute(
+        """
+        DELETE FROM projects
+        WHERE project_id = ? AND user_id = ?
+        """,
+        (project_id, session["user_id"]),
+    )
+    db.commit()
+    db.close()
+    return redirect(url_for("dashbboard"))
 
 
 # PDF Generation and Styles

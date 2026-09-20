@@ -489,6 +489,9 @@ textarea {
     gap: 4px;
 }
 
+.project-buttons form {
+    margin: 0;
+}
 
 /* Buttons */
 
@@ -506,6 +509,10 @@ textarea {
     font-size: 12px;
 
     cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 
