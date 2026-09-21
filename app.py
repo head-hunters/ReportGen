@@ -12,18 +12,22 @@ from io import BytesIO
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from dotenv import load_dotenv
 
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import HRFlowable
 
+import os
 import sqlite3
 import re
 
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = "your-secret-key"
+app.secret_key = os.environ["SECRET_KEY"]
 
 
 def login_required(f):

@@ -107,7 +107,7 @@ if (projectForm) {
     });
 }
 
-//Redirecting the user to the dashboard after pdf generation
+//Redirecting the user to the dashboard after pdf generation (Let js handle pdf downloading)
 
 const confirm_form = document.getElementById("confirm_form")
 
