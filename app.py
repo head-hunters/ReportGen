@@ -1,4 +1,14 @@
-from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask import (
+    Flask,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+    send_file,
+)
+from io import BytesIO
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -10,6 +20,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.platypus import HRFlowable
 
 import sqlite3
+import re
 
 app = Flask(__name__)
 app.secret_key = "your-secret-key"
@@ -322,7 +333,7 @@ def confirm():
             ),
         )
 
-        # To change EXISTING modules
+        # To REMOVE OLD modules
 
         db.execute(
             "DELETE FROM modules WHERE project_id = ?",
@@ -364,26 +375,7 @@ def confirm():
 
         project_id = cursor.lastrowid
 
-        for i, module in enumerate(data["modules"], start=1):
-
-            db.execute(
-                """
-            INSERT INTO modules (
-                project_id,
-                module_number,
-                name,
-                description
-            )
-            VALUES (?, ?, ?, ?)
-            """,
-                (
-                    project_id,
-                    i,
-                    module["name"],
-                    module["description"],
-                ),
-            )
-
+    # Insert current modules
     for i, module in enumerate(data["modules"], start=1):
         db.execute(
             """
@@ -406,11 +398,24 @@ def confirm():
     db.commit()
     db.close()
 
-    generate_pdf(data)
+    pdf = generate_pdf(data)
 
     session.pop("preview_data", None)
 
-    return redirect(url_for("dashboard"))
+    # Sanitising filename
+
+    filename = re.sub(r'[<>:"/\\|?*]', "-", data["title"])
+    filename = re.sub(r"\s+", " ", filename).strip()
+
+    response = send_file(
+        pdf,
+        as_attachment=True,
+        download_name=f"{filename}.pdf",
+        mimetype="application/pdf",
+    )
+
+    response.headers["Filename"] = f"{filename}.pdf"
+    return response
 
 
 @app.route("/delete/<int:project_id>", methods=["POST"])
@@ -503,7 +508,8 @@ def add_page_number(canvas, document):
 
 def generate_pdf(data):
 
-    pdf = SimpleDocTemplate("reports-temp/project_report.pdf", pagesize=A4)
+    buffer = BytesIO()
+    pdf = SimpleDocTemplate(buffer, pagesize=A4)
 
     styles = get_pdf_styles()
 
@@ -562,9 +568,10 @@ def generate_pdf(data):
 
     story.append(Paragraph(data["additional"], styles["body"]))
 
-    story.append(HRFlowable(**styles["separator"]))
-
     pdf.build(story, onFirstPage=add_page_number, onLaterPages=add_page_number)
+
+    buffer.seek(0)
+    return buffer
 
 
 if __name__ == "__main__":

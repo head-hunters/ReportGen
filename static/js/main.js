@@ -96,16 +96,65 @@ if (moduleCount && moduleContainer) {
 
 
 
-
-
-
-
-
 // Clearing Forms
 
 const projectForm = document.getElementById("projectForm");
 
-projectForm.addEventListener("reset", function () {
-    moduleContainer.innerHTML = "";
+if (projectForm) {
+    projectForm.addEventListener("reset", function () {
+        moduleContainer.innerHTML = "";
 
-})
+    });
+}
+
+//Redirecting the user to the dashboard after pdf generation
+
+const confirm_form = document.getElementById("confirm_form")
+
+if (confirm_form) {
+    confirm_form.addEventListener("submit", async function (event) {
+        event.preventDefault(); //prevents the form from sending a POST request
+
+        const button = this.querySelector("button[type='submit']");
+        const original_text = button.textContent.trim();
+        button.disabled = true;
+        button.textContent = "Generating...";
+
+
+
+
+        try {
+            const response = await fetch(this.action, { //sends a post request to the /confirm path
+                method: "POST"
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to generate PDF");
+            }
+
+            const filename = response.headers.get("Filename");
+            const blob = await response.blob(); //convert response into blob since a pdf is binary data
+
+            // create temp url and click it to trigger the download
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = filename;
+            link.click();
+
+            window.URL.revokeObjectURL(url);
+
+            // redirects the user to the dashboard
+            window.location.href = "/dashboard.html";
+
+        } catch (error) {
+            console.error(error);
+            alert("Something went wrong while generating the PDF");
+
+            //Make the generate button accessible again
+            button.disabled = false;
+            button.textContent = original_text;
+        }
+    })
+};

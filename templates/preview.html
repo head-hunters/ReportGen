@@ -236,7 +236,7 @@ Preview
                                 Cancel
                             </button>
 
-                            <form method="POST" action="{{ url_for('confirm') }}">
+                            <form id="confirm_form" method="POST" action="{{ url_for('confirm') }}">
                                 <button type="submit" class="btn btn-generate">
                                     {% if existing_project %}
                                     Yes
