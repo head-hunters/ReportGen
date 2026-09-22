@@ -18,7 +18,7 @@
 
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a class="navbar-brand">
+            <a class="navbar-brand" href="{{url_for('dashboard')}}">
                 ReportGen
             </a>
 
@@ -32,8 +32,12 @@
 
 
                 {% else %}
+                {% if request.endpoint != "login" %}
                 <a class="btn btn-outline-light" href="{{ url_for('login') }}">Login</a>
+                {%endif%}
+                {% if request.endpoint != "register" %}
                 <a class="btn btn-outline-light" href="{{ url_for('register') }}">Register</a>
+                {%endif%}
 
                 {% endif %}
             </div>

@@ -40,6 +40,16 @@ def login_required(f):
     return decorated_function
 
 
+def guest_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "user_id" in session:
+            return redirect(url_for("dashboard"))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
 @app.route("/")
 def index():
     if "user_id" not in session:
@@ -48,27 +58,32 @@ def index():
 
 
 @app.route("/register", methods=["GET", "POST"])
+@guest_only
 def register():
 
     if request.method == "POST":
         db = sqlite3.connect("database/app.db")
-        email = request.form.get("email")
+        email = request.form.get("email").strip().lower()
+        email_pattern = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
         password = request.form.get("password")
         confirm = request.form.get("confirm")
 
         if not email:
-            flash("Invalid email.", "Error")
+            flash("Invalid Email.", "Error")
+            return render_template("register.html")
+        elif not re.match(email_pattern, email):
+            flash("Invalid Email.", "Error")
             return render_template("register.html")
         elif not password:
-            flash("Invalid password.", "Error")
+            flash("Invalid Password.", "Error")
             return render_template("register.html", email=email)
         elif not confirm or password != confirm:
-            flash("Invalid confirmation", "Error")
+            flash("Invalid Confirmation", "Error")
             return render_template("register.html", email=email, password=password)
 
         try:
 
-            db.execute(
+            cursor = db.execute(
                 "INSERT INTO users (email,password_hash) VALUES(?,?)",
                 (email, generate_password_hash(password)),
             )
@@ -79,7 +94,7 @@ def register():
             flash("Account already Exists!", "Error")
             return render_template("register.html")
 
-        session["user_id"] = db.lastrowid
+        session["user_id"] = cursor.lastrowid
         return render_template("dashboard.html")
     else:
         return render_template("register.html")
@@ -92,24 +107,25 @@ def logout():
 
 
 @app.route("/login", methods=["GET", "POST"])
+@guest_only
 def login():
 
     if request.method == "POST":
         db = sqlite3.connect("database/app.db")
         db.row_factory = sqlite3.Row
-        email = request.form.get("email")
+        email = request.form.get("email").strip().lower()
         password = request.form.get("password")
 
         if not email:
-            flash("Invalid email.", "Error")
+            flash("Invalid Email.", "Error")
             return render_template("login.html")
         elif not password:
-            flash("Invalid password.", "Error")
+            flash("Invalid Password.", "Error")
             return render_template("login.html", email=email)
 
         user = db.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
         if not user or not check_password_hash(user["password_hash"], password):
-            flash("Invalid username and/or password", "Error")
+            flash("Invalid Username and/or Password", "Error")
             return render_template("login.html")
 
         session["user_id"] = user["id"]
