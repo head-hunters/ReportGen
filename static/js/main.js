@@ -150,12 +150,16 @@ if (confirm_form) {
                 throw new Error("Failed to generate PDF");
             }
 
-            const filename = response.headers.get("Filename");
+            const filename = response.headers.get("Filename") || "report.pdf";
             const blob = await response.blob(); //convert response into blob since a pdf is binary data
-            console.log("PDF blob:", blob.type, blob.size);
+
+            // webkit workaround
+            const downloadBlob = new Blob([blob], {
+                type: "application/octet-stream"
+            });
 
             // create temp url and click it to trigger the download
-            const url = window.URL.createObjectURL(blob);
+            const url = window.URL.createObjectURL(downloadBlob);
 
             const link = document.createElement("a");
             link.href = url;
