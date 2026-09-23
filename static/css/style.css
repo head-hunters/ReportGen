@@ -200,15 +200,34 @@ textarea {
 .modal-content {
     background: #ffffff;
     color: #000000;
-    border: 1px solid #dddddd;
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease;
+
 }
 
 
-.modal-header,
-.modal-footer {
-    border-color: #dddddd;
+.modal-content:hover {
+    border: 1px solid black;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+
+.modal-content .modal-header,
+.modal-content .modal-footer {
+    border: none;
+}
+
+
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0.25rem;
+}
+
+.modal-action {
+    align-self: flex-end;
+}
 
 .modal-title {
     color: #000000;

@@ -69,10 +69,10 @@ def register():
         confirm = request.form.get("confirm")
 
         if not email:
-            flash("Invalid Email.", "Error")
+            flash("Invalid Email Address.", "Error")
             return render_template("register.html")
         elif not re.match(email_pattern, email):
-            flash("Invalid Email.", "Error")
+            flash("Invalid Email Address.", "Error")
             return render_template("register.html")
         elif not password:
             flash("Invalid Password.", "Error")
@@ -91,7 +91,7 @@ def register():
             db.commit()
             db.close()
         except sqlite3.IntegrityError:
-            flash("Account already Exists!", "Error")
+            flash("Account Already Exists!", "Error")
             return render_template("register.html")
 
         session["user_id"] = cursor.lastrowid
@@ -117,7 +117,7 @@ def login():
         password = request.form.get("password")
 
         if not email:
-            flash("Invalid Email.", "Error")
+            flash("Invalid Email Address.", "Error")
             return render_template("login.html")
         elif not password:
             flash("Invalid Password.", "Error")
