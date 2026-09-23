@@ -1,10 +1,10 @@
 //Applying form-control to each input tag
-const inputs = document.querySelectorAll("input");
+const inputs = document.querySelectorAll("input")
 
 inputs.forEach(input => {
     input.classList.add("form-control")
 
-});
+})
 
 // Displaying error messages
 const flashModal = document.getElementById("flashModal");
@@ -107,26 +107,9 @@ if (projectForm) {
     });
 }
 
-//Small helper function to display an error modal when pdf generation fails
-
-function showError(message) {
-    const errorMessage = document.getElementById("flashMessage");
-    const flashModal = document.getElementById("flashModal");
-
-    if (!errorMessage || !flashModal) {
-        return;
-    }
-
-    errorMessage.textContent = message;
-    const modal = new bootstrap.Modal(flashModal);
-    modal.show();
-}
-
-
-
 //Redirecting the user to the dashboard after pdf generation (Let js handle pdf downloading)
 
-const confirm_form = document.getElementById("confirm_form");
+const confirm_form = document.getElementById("confirm_form")
 
 if (confirm_form) {
     confirm_form.addEventListener("submit", async function (event) {
@@ -146,20 +129,14 @@ if (confirm_form) {
             });
 
             if (!response.ok) {
-                console.error("PDF request failed:", response.status, response.statusText);
                 throw new Error("Failed to generate PDF");
             }
 
-            const filename = response.headers.get("Filename") || "report.pdf";
+            const filename = response.headers.get("Filename");
             const blob = await response.blob(); //convert response into blob since a pdf is binary data
 
-            // webkit workaround
-            const downloadBlob = new Blob([blob], {
-                type: "application/octet-stream"
-            });
-
             // create temp url and click it to trigger the download
-            const url = window.URL.createObjectURL(downloadBlob);
+            const url = window.URL.createObjectURL(blob);
 
             const link = document.createElement("a");
             link.href = url;
@@ -173,9 +150,7 @@ if (confirm_form) {
 
         } catch (error) {
             console.error(error);
-
-            showError("Error Generating the PDF.");
-
+            alert("Something went wrong while generating the PDF");
 
             //Make the generate button accessible again
             button.disabled = false;

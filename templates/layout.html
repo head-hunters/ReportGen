@@ -74,13 +74,9 @@
                 </div>
 
                 <div class="modal-body">
-                    <span id="flashMessage">
-                        {% with messages=get_flashed_messages()%}
-                        {{messages[0] if messages else ""}}
-                        {%endwith%}
-                    </span>
+                    {{messages[0]}}
 
-                    <button types="button" class="btn btn-outline-light modal-action" data-bs-dismiss="modal">
+                    <button class="btn btn-outline-light modal-action" data-bs-dismiss="modal">
                         Okay
                     </button>
                 </div>
