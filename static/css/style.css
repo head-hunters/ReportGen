@@ -15,7 +15,7 @@ h1 {
 
 /* Project_Form CSS */
 
-/* ================= BODY ================= */
+/* Body */
 
 body {
     min-height: 100vh;
@@ -24,7 +24,7 @@ body {
 }
 
 
-/* ================= HEADER ================= */
+/*Header*/
 
 .hero {
     background: #ffffff;
@@ -42,7 +42,7 @@ body {
 }
 
 
-/* ================= FORM CARD ================= */
+
 
 .form-card {
     margin-top: 35px;
@@ -53,7 +53,7 @@ body {
 }
 
 
-/* ================= SECTION HEADINGS ================= */
+/* Section Headings */
 
 .section-title {
     color: #000000;
@@ -71,21 +71,20 @@ body {
     border-bottom: none;
 }
 
-/* ================= DESCRIPTIONS ================= */
+
 
 .text-muted {
     color: #666666 !important;
 }
 
 
-/* ================= LABELS ================= */
+
 
 .form-label {
     color: #000000;
 }
 
 
-/* ================= INPUTS ================= */
 
 .form-control,
 .form-select {
@@ -111,14 +110,14 @@ body {
 }
 
 
-/* ================= TEXTAREA ================= */
+
 
 textarea {
     resize: vertical;
 }
 
 
-/* ================= BUTTONS ================= */
+/* Buttons */
 
 .btn {
     border-radius: 6px;
@@ -188,14 +187,14 @@ textarea {
 }
 
 
-/* ================= BORDER ================= */
+
 
 .border-top {
     border-color: #dddddd !important;
 }
 
 
-/* ================= MODAL ================= */
+
 
 .modal-content {
     background: #ffffff;
@@ -259,18 +258,11 @@ textarea {
 }
 
 
-/* ================= REQUIRED FIELDS ================= */
 
 .required::after {
     content: " *";
     color: #000000;
 }
-
-
-
-
-
-
 
 
 /* Preview Page CSS */
