@@ -236,7 +236,8 @@ Preview
                                 Cancel
                             </button>
 
-                            <form id="confirm_form" method="POST" action="{{ url_for('confirm') }}">
+                            <form id="confirm_form" method="POST" action="{{ url_for('confirm') }}"
+                                target="pdfDownloadFrame">
                                 <button type="submit" class="btn btn-generate">
                                     {% if existing_project %}
                                     Yes
@@ -245,6 +246,7 @@ Preview
                                     {% endif %}
                                 </button>
                             </form>
+                            <iframe name="pdfDownloadFrame" style="display: none;"></iframe>
 
                         </div>
 
