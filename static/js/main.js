@@ -122,6 +122,6 @@ if (confirm_form) {
 
         setTimeout(() => {
             window.location.href = "/dashboard.html";
-        }, 100);
+        }, 1000);
     });
 }
