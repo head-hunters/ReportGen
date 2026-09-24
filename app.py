@@ -11,6 +11,7 @@ from flask import (
 from io import BytesIO
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -427,8 +428,10 @@ def confirm():
 
     # Sanitising filename
 
-    filename = re.sub(r'[<>:"/\\|?*]', "-", data["title"])
-    filename = re.sub(r"\s+", " ", filename).strip()
+    filename = secure_filename(data["title"])
+
+    if not filename:
+        filename = "report"
 
     response = send_file(
         pdf,
@@ -437,7 +440,6 @@ def confirm():
         mimetype="application/pdf",
     )
 
-    response.headers["Filename"] = f"{filename}.pdf"
     return response
 
 
