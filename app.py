@@ -418,8 +418,11 @@ def confirm():
     db.commit()
     db.close()
 
-    pdf = generate_pdf(data)
-
+    try:
+        pdf = generate_pdf(data)
+    except Exception as e:
+        print("Error generating PDF", e)
+        return "Error generating PDF", 500
     session.pop("preview_data", None)
 
     # Sanitising filename
