@@ -27,7 +27,7 @@ function createModules(count, existingModules = []) {
 
         for (let i = currentCount + 1; i <= count; i++) {
 
-            const module = existingModules[i - 1] || {};
+            const module = existingModules[i - 1] || {}; //get existing module data if it is available
 
             moduleContainer.insertAdjacentHTML("beforeend", `
                 <div class="module mb-4">
@@ -71,6 +71,8 @@ const moduleContainer = document.getElementById("moduleContainer");
 
 const existingModulesElement = document.getElementById("existingModules");
 
+
+// Retrieve the contents of the previous modules
 const existingModules = existingModulesElement
     ? JSON.parse(existingModulesElement.dataset.modules)
     : [];
@@ -79,14 +81,14 @@ if (moduleCount && moduleContainer) {
 
     // Restore saved modules when editing (Persistence)
     if (existingModules.length > 0) {
-        createModules(existingModules.length, existingModules);
+        createModules(existingModules.length, existingModules); // persistence
     }
 
-    moduleCount.addEventListener("input", function () {
+    moduleCount.addEventListener("input", function () { // get module count input and create modules accordingly
 
         const count = parseInt(moduleCount.value);
 
-        if (isNaN(count)) {
+        if (isNaN(count)) { // is number?
             return;
         }
 

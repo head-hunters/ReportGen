@@ -290,7 +290,9 @@ def edit(project_id):
 
     if preview_data and str(preview_data.get("project_id")) == str(project_id):
         return render_template(
-            "project_form.html", **preview_data, existing_project=True
+            "project_form.html",
+            **preview_data,
+            existing_project=True,  # makes sure that the current project being edited and the project stored in the flask session are the same
         )
 
     db = sqlite3.connect("database/app.db")
